@@ -294,8 +294,8 @@
     </h2>
     <p class="cta-sub reveal rd1">Ne choisis pas avec ta tête. Écoute le grain de sable qui frémit sous tes pieds.</p>
     <div class="cta-btns reveal rd2">
-      <a href="#traversees" class="btn-p">⭐ Voir les Traversées</a>
-      <a href="/register"   class="btn-s">🌵 Rejoindre la Caravane</a>
+      <a href="{{route("traversees")}}" class="btn-p">⭐ Voir les Traversées</a>
+      <a href="{{route("traverser")}}"   class="btn-s">🌵 Rejoindre la Caravane</a>
     </div>
   </div>
 </section>

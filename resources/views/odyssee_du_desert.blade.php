@@ -194,7 +194,7 @@
     <p class="dj-sub">Le désert n'a pas de fin...<br>Rejoins la caravane des Nomades de l'Éveil.</p>
     <div class="dj-btns">
       <a href="{{route("traverser")}}" class="btn-p">⭐️ &nbsp;Rejoindre la Caravane</a>
-      <a href="#" class="btn-s">🌵 &nbsp;Choisir ma Traversée</a>
+      <a href="{{route("traversees")}}" class="btn-s">🌵 &nbsp;Choisir ma Traversée</a>
     </div>
   </div>
 </section>
