@@ -102,8 +102,8 @@
         </p>
 
         <div class="cta-group">
-            <a href="{{ route('odyssee_du_desert') }}" class="btn btn-p">⭐️ &nbsp;Rejoindre la Caravane de l'odysée du desert</a>
-            <a href="{{ route('traverser') }}"    class="btn btn-s">🌵 &nbsp;Retrouver ma Tente</a>
+            <a href="{{ route('traverser') }}" class="btn btn-p">⭐️ &nbsp;Rejoindre la Caravane de l'odysée du desert</a>
+            <a href="{{ route('odyssee_du_desert') }}" class="btn btn-s">🌵 &nbsp;Odyssée du désert</a>
         </div>
     </section>
 
