@@ -20,4 +20,4 @@ Route::get('/traversees', function () {
 })->name('traversees');
 
 
-Route::post('register', [RegisteredUserController::class, 'store'])->name('register');
+Route::get('register', [RegisteredUserController::class, 'store'])->name('register');
