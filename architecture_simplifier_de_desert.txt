@@ -1,0 +1,57 @@
+
+le workflow de renait sens 
+Utilisateurs
+      │
+vois la VSL (clic sur le lien)
+      |
+Frontend (arrive sur le site reanait-sens)
+      │
+INSCRIPTION ----> stockage dans le EspoCRM (lead)
+      |
+Appel (Krim, Chris, Paola)
+      |
+validé (payé etc...)
+      |
+vous créé les clé acces cad cree un user sur noddle (id + mdp) 
+      |
+le client suite la Formation (sur LMS Moodle)
+      |a voir condition acces commun
+Communauté (avec Flarum)
+
+
+A noter tout ces outils sont gratuit on a juste les installer sur notre serveur ovh
+
+Je vous partage le workflow du système Renaît Sens pour que tout le monde comprenne bien le parcours utilisateur :
+
+1️⃣ L’utilisateur voit la VSL
+→ Il clique sur le lien.
+
+2️⃣ Arrivée sur le site (Frontend Renaît Sens)
+→ L’utilisateur arrive sur la page du site.
+
+3️⃣ Inscription
+→ L’utilisateur s’inscrit.
+→ Ses informations sont automatiquement enregistrées dans EspoCRM comme lead.
+
+4️⃣ Appel de qualification
+→ Le lead est contacté par Krim, Chris ou Paola.
+
+5️⃣ Validation du client
+→ Si la personne est validée et effectue le paiement.
+
+6️⃣ Création des accès
+→ Nous créons son compte utilisateur sur Moodle :
+
+ID (identifiant)
+
+Mot de passe
+
+7️⃣ Accès à la formation
+→ Le client peut suivre la formation sur le LMS Moodle.
+
+8️⃣ Accès à la communauté
+→ Le client rejoint ensuite la communauté sur Flarum.
+→ (À définir : conditions d’accès communes).
+
+📌 En résumé :
+VSL → Site → Inscription (EspoCRM) → Appel → Paiement → Création accès Moodle → Formation → Communauté Flarum

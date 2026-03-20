@@ -1,0 +1,104 @@
+Oui, tu peux mettre en place un SSO entre Flarum, EspoCRM et Moodle. 👍
+Mais il faut un fournisseur d’identité central (Identity Provider / IdP) qui va gérer l’authentification pour les trois.
+
+🧠 Principe de l’architecture
+Utilisateur
+     │
+     ▼
+Identity Provider (SSO)
+     │
+ ┌───┴───────────┬───────────┐
+ ▼               ▼           ▼
+Flarum        EspoCRM      Moodle
+Forum          CRM         LMS
+
+L’utilisateur se connecte une seule fois sur le serveur SSO, puis il accède aux trois applications.
+
+🔑 Solutions SSO compatibles
+
+Les solutions les plus utilisées pour ce genre d’intégration :
+
+Keycloak (très populaire, open source)
+
+Auth0
+
+Okta
+
+Microsoft Entra ID
+
+👉 Keycloak est souvent le meilleur choix pour un projet auto-hébergé.
+
+🔗 Compatibilité des applications
+🧑‍🎓 Moodle
+
+Moodle supporte nativement :
+
+SAML
+
+OAuth2
+
+OpenID Connect
+
+Donc SSO facile à mettre en place.
+
+💼 EspoCRM
+
+EspoCRM supporte :
+
+OAuth2
+
+OpenID Connect
+
+SAML (via extension)
+
+Donc compatible avec Keycloak ou Auth0.
+
+💬 Flarum
+
+Flarum ne supporte pas SSO par défaut, mais il existe des extensions :
+
+Flarum OAuth Client
+
+Flarum OpenID Connect
+
+FoF OAuth
+
+Donc on peut le connecter au même IdP.
+
+⚙️ Stack SSO recommandée
+
+Solution simple et open source :
+
+Keycloak (SSO)
+      │
+ ┌────┼───────────┐
+ ▼    ▼           ▼
+Moodle EspoCRM   Flarum
+OIDC   OIDC      OAuth/OIDC
+
+👉 Tout passe par OpenID Connect (OIDC).
+
+🚀 Avantages
+
+Un seul compte pour forum + CRM + plateforme de formation
+
+Gestion centralisée des utilisateurs
+
+Possibilité d’ajouter 2FA
+
+Synchronisation LDAP / Active Directory possible
+
+⚠️ Point important
+
+Il faut gérer :
+
+la création automatique des utilisateurs
+
+les rôles
+
+la synchronisation des profils
+
+✅ Conclusion :
+Oui, c’est totalement faisable. La solution la plus propre serait :
+
+Keycloak + OpenID Connect pour Flarum, EspoCRM et Moodle.
