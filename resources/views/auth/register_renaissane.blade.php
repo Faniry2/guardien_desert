@@ -11,7 +11,7 @@
 <canvas id="bg-canvas"></canvas>
  
 <!-- Dunes -->
-<div class="dunes">
+{{-- <div class="dunes">
   <svg viewBox="0 0 1440 200" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
     <defs>
       <linearGradient id="dg1" x1="0" y1="0" x2="0" y2="1">
@@ -27,7 +27,7 @@
     <path d="M0,142 Q180,90 360,128 Q540,168 720,106 Q900,48 1100,110 Q1302,158 1440,128 L1440,200 L0,200Z" fill="url(#dg2)" opacity=".86"/>
     <path id="dcrest" d="M0,144 Q180,92 360,130 Q540,170 720,108 Q900,50 1100,112 Q1302,160 1440,130" fill="none" stroke="#C9A96E" stroke-width=".55" opacity=".25"/>
   </svg>
-</div>
+</div> --}}
  
 <a href="/" class="back-link">Accueil</a>
  
@@ -164,7 +164,7 @@
                   <div class="trav-body">
                     <div class="trav-name">Regard</div>
                     <div class="trav-tag">Se poser, cesser de fuir et enfin se voir.</div>
-                    <div class="trav-price">600 €</div>
+                    <div class="trav-price">800 €</div>
                     <ul class="trav-feats">
                       <li>3 Dialogues à cœur ouvert</li>
                       <li>Le Lien — fil direct Sentinelle</li>
@@ -200,7 +200,7 @@
                   <div class="trav-body">
                     <div class="trav-name">Présence</div>
                     <div class="trav-tag">Habiter son corps, ses sens et chaque instant.</div>
-                    <div class="trav-price">1 000 €</div>
+                    <div class="trav-price">1 400 €</div>
                     <ul class="trav-feats">
                       <li>6 Dialogues profonds</li>
                       <li>L'Oasis — espace Nomades</li>

@@ -13,8 +13,10 @@ Route::get('/', fn() => view('welcome'));
 Route::get('/odyssee_du_desert', fn() => view('odyssee_du_desert'))->name('odyssee_du_desert');
 Route::get('/rejoint-la-travserser', fn() => view('auth.register_renaissane'))->name('traverser');
 Route::get('/traversees', fn() => view('traversees'))->name('traversees');
+Route::get('/djanet', fn() => view('djanet'))->name('djanet');
 
 Route::post('register', [RegisteredUserController::class, 'store'])->name('register');
+
 
 // ── Auth (Breeze) ──────────────────────────────────────────────
 require __DIR__.'/auth.php';
