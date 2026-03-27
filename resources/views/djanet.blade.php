@@ -274,5 +274,5 @@
 @endsection
 
 @push("scripts")
-    @vite(['resources/js/login.js', 'resources/js/djanet.js'])
+    @vite(['resources/js/djanet.js'])
 @endpush
