@@ -4,6 +4,7 @@
 
 namespace App\Livewire;
 
+use App\Models\Carnet;
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
 
@@ -19,6 +20,10 @@ class Dashboard extends Component
         $user   = Auth::user();
         $carnet = $user->carnet;
 
+         if (!$carnet) {
+            $this->redirect(route('espace.carnet.setup'));
+            return;
+        }
         if ($carnet) {
             $this->dayNumber = $carnet->currentDayNumber();
             $this->module    = (int) ceil($this->dayNumber / 10);

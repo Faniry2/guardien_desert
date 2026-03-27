@@ -11,8 +11,10 @@
       <li><a href="/odyssee_du_desert#djanet">Djanet</a></li>
     </ul>
   </nav>
-  <a href="#traversees" class="nav-cta" id="nav-cta-desk">Commencer</a>
+  <a href="{{route("login")}}" class="nav-cta" id="nav-cta-desk">Entre dans l'Oasis</a>
   <button class="burger" id="burger" onclick="toggleMenu()" aria-label="Menu">
-    <span></span><span></span><span></span>
+    <span></span>
+    <span></span>
+    <span></span>
   </button>
-</header>traversees
+</header>

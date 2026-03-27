@@ -13,7 +13,7 @@
 <div id="heat"></div>
 
 <!-- Dunes -->
-<div class="dunes" id="dunes">
+{{-- <div class="dunes" id="dunes">
     <svg viewBox="0 0 1440 400" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
         <defs>
             <linearGradient id="dg1" x1="0" y1="0" x2="0" y2="1">
@@ -33,7 +33,7 @@
         <path id="crest" d="M0,320 Q180,240 360,290 Q540,342 720,260 Q900,180 1100,260 Q1300,332 1440,280"
               fill="none" stroke="#C9A96E" stroke-width=".7" opacity=".3"/>
     </svg>
-</div>
+</div> --}}
 
 <!-- Particles -->
 <div class="embers" id="embers"></div>
@@ -70,10 +70,10 @@
             </svg>
         </div>
 
-        <p class="eyebrow">Communauté · Renait-Sens</p>
+        <p class="eyebrow"></p>
 
         <h1>
-            L'Ombre du Tassili
+            Programme renait-sens 90
             <em>Guide des Nomades de l'Éveil</em>
         </h1>
 
@@ -85,25 +85,19 @@
 
         <p class="tagline">
             <span class="tl tl-night">
-                Sous cette tente, chaque âme trouve son souffle.<br>
-                Le sable efface hier, les étoiles éclairent demain.<br>
-                Bienvenue, Nomade. 🌙
+                -En 90 jours, libère tes blocages émotionnels et deviens la personne que tu es vraiment. 🌙
             </span>
             <span class="tl tl-dawn">
-                Le ciel se teint de rose avant que le soleil ne parle.<br>
-                C'est l'heure du premier souffle, du nouveau départ.<br>
-                Lève-toi, Nomade — l'aube t'appartient. 💫
+              -En 90 jours, libère tes blocages émotionnels et deviens la personne que tu es vraiment.. 💫
             </span>
             <span class="tl tl-noon">
-                Sous le soleil de feu, le sable révèle sa vérité nue.<br>
-                Pas d'ombre où se cacher — seulement toi, debout.<br>
-                Marche, Nomade. Le désert te voit. 🐪
+                -En 90 jours, libère tes blocages émotionnels et deviens la personne que tu es vraiment. 🐪
             </span>
         </p>
 
         <div class="cta-group">
-            <a href="{{ route('traverser') }}" class="btn btn-p">⭐️ &nbsp;Rejoindre la Caravane de l'odysée du desert</a>
-            <a href="{{ route('odyssee_du_desert') }}" class="btn btn-s">🌵 &nbsp;Odyssée du désert</a>
+            <a href="{{ route('traverser') }}" class="btn btn-p">⭐️ &nbsp;Choisir ta traversée</a>
+            <a href="{{ route('odyssee_du_desert') }}" class="btn btn-s">🌵 &nbsp;LA TRAVERSÉE DES NOMADES</a>
         </div>
     </section>
 
@@ -123,7 +117,7 @@
     </section>
 
     <div class="pacte">
-        <p class="pacte-title">Le Pacte de l'Aman</p>
+        {{-- <p class="pacte-title">Le Pacte de l'Aman</p> --}}
         <p class="pacte-txt">
             « Sous cette tente, on dépose les armes.<br>
             La confidentialité est notre loi.<br>
@@ -134,10 +128,10 @@
     </div>
 </main>
 
-<div class="scroll-hint">
+{{-- <div class="scroll-hint">
     <span>Explorer</span>
     <div class="scroll-arrow"></div>
-</div>
+</div> --}}
 @endsection
 @push("scripts")
     @vite(['resources/js/welcome_page.js'])

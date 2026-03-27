@@ -22,16 +22,16 @@
 
     <!-- ══ HERO ══ -->
     <div class="mobile-nav" id="mobile-nav">
-  <a href="#appel"      onclick="closeMenu()">L'Appel</a>
-  <div class="mnav-div"></div>
-  <a href="#traversees" onclick="closeMenu()">Les Traversées</a>
-  <div class="mnav-div"></div>
-  <a href="#bulle"      onclick="closeMenu()">La Bulle</a>
-  <div class="mnav-div"></div>
-  <a href="#djanet"     onclick="closeMenu()">Djanet</a>
-  <div class="mnav-div"></div>
-  <a href="#traversees" onclick="closeMenu()" style="font-size:1rem;letter-spacing:.2em;margin-top:1rem;color:var(--acc)">⭐ Commencer</a>
-</div>
+      <a href="#appel"      onclick="closeMenu()">L'Appel</a>
+      <div class="mnav-div"></div>
+      <a href="#traversees" onclick="closeMenu()">Les Traversées</a>
+      <div class="mnav-div"></div>
+      <a href="#bulle"      onclick="closeMenu()">La Bulle</a>
+      <div class="mnav-div"></div>
+      <a href="#djanet"     onclick="closeMenu()">Djanet</a>
+      <div class="mnav-div"></div>
+      <a href="{{route("login")}}" style="font-size:1rem;letter-spacing:.2em;margin-top:1rem;color:var(--acc)">Entre dans l'odyssée</a>
+    </div>
 
 <!-- ══ HERO ══ -->
 <section id="hero">

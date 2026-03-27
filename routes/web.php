@@ -1,77 +1,55 @@
 <?php
+// routes/web.php — Version propre sans Livewire
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RegisteredUserController;
+use App\Http\Controllers\Espace\DashboardController;
+use App\Http\Controllers\Espace\CarnetController;
+use App\Http\Controllers\Espace\DetenteController;
 use Illuminate\Support\Facades\Route;
-use App\Livewire\Dashboard;
-use App\Livewire\Carnet\DayEntry;
-use App\Livewire\Carnet\Index as CarnetIndex;
-use App\Livewire\Carnet\Bilans;
-use App\Livewire\Carnet\Setup as CarnetSetup;
-use App\Livewire\Detente\Index as DetenteIndex;
-use App\Livewire\Detente\Musique;
 
+// ── Pages publiques ────────────────────────────────────────────
+Route::get('/', fn() => view('welcome'));
+Route::get('/odyssee_du_desert', fn() => view('odyssee_du_desert'))->name('odyssee_du_desert');
+Route::get('/rejoint-la-travserser', fn() => view('auth.register_renaissane'))->name('traverser');
+Route::get('/traversees', fn() => view('traversees'))->name('traversees');
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::post('register', [RegisteredUserController::class, 'store'])->name('register');
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+// ── Auth (Breeze) ──────────────────────────────────────────────
+require __DIR__.'/auth.php';
 
+// ── Profil ─────────────────────────────────────────────────────
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::get('/profile',    [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile',  [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-// ── Authentification (Laravel Breeze) ──────────────────────────
-require __DIR__.'/auth.php';
-
-// ── Espace membre (auth + email vérifié) ───────────────────────
+// ── Espace membre ──────────────────────────────────────────────
 Route::middleware(['auth', 'verified'])
     ->prefix('espace')
-    ->name('espace.')
     ->group(function () {
 
         Route::redirect('/', '/espace/dashboard');
 
-        Route::get('/dashboard', Dashboard::class)
-            ->name('dashboard');
+        // Dashboard
+        Route::get('/dashboard', [DashboardController::class, 'index'])->name('espace.dashboard');
 
         // Carnet
-        Route::prefix('carnet')->name('carnet.')->group(function () {
-            Route::get('/',            CarnetIndex::class)->name('index');
-            Route::get('/setup',       CarnetSetup::class)->name('setup');
-            Route::get('/bilans',      Bilans::class)->name('bilans');
-            Route::get('/jour/{day}',  DayEntry::class)
-                ->where('day', '[1-9][0-9]?')
-                ->name('day');
-            Route::get('/reset',  [\App\Http\Controllers\CarnetController::class, 'reset'])
-                ->name('reset');
-        });
+        Route::get('/carnet',           [CarnetController::class, 'index'])->name('carnet.index');
+        Route::get('/carnet/setup',     [CarnetController::class, 'setup'])->name('carnet.setup');
+        Route::get('/carnet/bilans',    [CarnetController::class, 'bilans'])->name('carnet.bilans');
+        Route::get('/carnet/jour/{day}',[CarnetController::class, 'day'])->whereNumber('day')->name('carnet.day');
+        Route::post('/carnet/jour/{day}/complete', [CarnetController::class, 'complete'])->whereNumber('day')->name('carnet.complete');
+        Route::get('/carnet/reset',     [CarnetController::class, 'reset'])->name('carnet.reset');
 
         // Détente
-        Route::prefix('detente')->name('detente.')->group(function () {
-            Route::get('/',         DetenteIndex::class)->name('index');
-            Route::get('/musique',  Musique::class)->name('musique');
-        });
+        Route::get('/detente',         [DetenteController::class, 'index'])->name('detente.index');
+        Route::get('/detente/musique', [DetenteController::class, 'musique'])->name('detente.musique');
+        Route::get('/detente/audio/{slug}', [DetenteController::class, 'stream'])
+            ->where('slug', '[a-z0-9\-]+')
+            ->name('detente.stream');
 
-        // Profil (Breeze)
-        Route::get('/profil', [\App\Http\Controllers\ProfileController::class, 'edit'])
-            ->name('profile.edit');
-        Route::patch('/profil', [\App\Http\Controllers\ProfileController::class, 'update'])
-            ->name('profile.update');
-        Route::delete('/profil', [\App\Http\Controllers\ProfileController::class, 'destroy'])
-            ->name('profile.destroy');
+        Route::get('/detente/meditations', [DetenteController::class, 'meditations'])->name('detente.meditations');
     });
-
-// Redirect root → dashboard (si connecté) ou login
-Route::get('/', function () {
-    return auth()->check()
-        ? redirect()->route('espace.dashboard')
-        : redirect()->route('login');
-});
-
-
-require __DIR__.'/auth.php';
