@@ -22,8 +22,10 @@ function setMode(m){
 
 // ══ CANVAS ══
 (function(){
-  const cv=document.getElementById('bg-canvas'),ctx=cv.getContext('2d');
-  let W,H,stars=[];
+  const cv=document.getElementById('bg-canvas')
+  if (cv){
+   const ctx=cv.getContext('2d');
+    let W,H,stars=[];
   function resize(){
     W=cv.width=window.innerWidth;H=cv.height=window.innerHeight;
     stars=Array.from({length:200},()=>({
@@ -88,6 +90,8 @@ function setMode(m){
   }
   window.addEventListener('resize',resize);resize();
   requestAnimationFrame(draw);
+  }
+  
 })();
 
 // ══ CURSEUR ══
