@@ -7,13 +7,13 @@
     <ul>
       <li><a href="/odyssee_du_desert#appel">L'Appel</a></li>
       <li><a href="{{ route('traversees') }}">Les Traversées</a></li>
-      <li><a href="/odyssee_du_desert#bulle">La Bulle</a></li>
-      <li><a href="/odyssee_du_desert#djanet">Djanet</a></li>
+      <li><a href="/odyssee_du_desert#bulle">L'oasis</a></li>
+      <li><a href="{{route('djanet')}}">Djanet</a></li>
     </ul>
   </nav>
   {{-- <a href="{{route("login")}}" class="nav-cta" id="nav-cta-desk">Entre dans l'Oasis</a> --}}
   <a href="{{ auth()->check() ? route('espace.dashboard') : route('login') }}" class="nav-cta" id="nav-cta-desk">
-    Entre dans l'Oasis
+    Ton carnet de traverser
   </a>
   <button class="burger" id="burger" onclick="toggleMenu()" aria-label="Menu">
     <span></span>
