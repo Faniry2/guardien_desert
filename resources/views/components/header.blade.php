@@ -11,7 +11,10 @@
       <li><a href="/odyssee_du_desert#djanet">Djanet</a></li>
     </ul>
   </nav>
-  <a href="{{route("login")}}" class="nav-cta" id="nav-cta-desk">Entre dans l'Oasis</a>
+  {{-- <a href="{{route("login")}}" class="nav-cta" id="nav-cta-desk">Entre dans l'Oasis</a> --}}
+  <a href="{{ auth()->check() ? route('espace.dashboard') : route('login') }}" class="nav-cta" id="nav-cta-desk">
+    Entre dans l'Oasis
+  </a>
   <button class="burger" id="burger" onclick="toggleMenu()" aria-label="Menu">
     <span></span>
     <span></span>

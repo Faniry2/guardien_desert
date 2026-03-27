@@ -179,6 +179,7 @@ function drawBirds(t){
 window.addEventListener('mousemove',e=>{
     const x=(e.clientX/window.innerWidth-.5)*14;
     const y=(e.clientY/window.innerHeight-.5)*6;
+    if(document.getElementById('dunes'))
     document.getElementById('dunes').style.transform=`translateX(${x*.3}px) translateY(${y*.2}px)`;
 });
 

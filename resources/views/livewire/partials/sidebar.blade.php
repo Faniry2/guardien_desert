@@ -23,9 +23,9 @@
 
         <div class="overflow-hidden transition-all duration-300"
              :class="collapsed ? 'w-0 opacity-0' : 'w-full opacity-100'">
-            <p class="font-serif text-[#E8D5A0] text-[15px] tracking-wide whitespace-nowrap">
+            <a href="/" class="font-serif text-[#E8D5A0] text-[15px] tracking-wide whitespace-nowrap">
                 Renaît-Sens
-            </p>
+            </a>
             <p class="text-[10px] text-[#C9973A]/40 tracking-widest uppercase whitespace-nowrap mt-0.5">
                 Traversée · 90 jours
             </p>

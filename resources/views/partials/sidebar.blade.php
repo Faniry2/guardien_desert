@@ -31,7 +31,7 @@
 
         <div class="overflow-hidden transition-all duration-300"
             :class="collapsed ? 'opacity-0 w-0' : 'opacity-100 w-full'">
-            <p class="font-serif text-[#E8D5A0] text-[18px] tracking-wide whitespace-nowrap">Renaît-Sens</p>
+            <a href="/" class="font-serif text-[#E8D5A0] text-[18px] tracking-wide whitespace-nowrap">Renaît-Sens</p>
             <p class="text-[16px] text-[#C9973A]/40 tracking-widest uppercase whitespace-nowrap mt-0.5">Traversée · 90 jours</p>
         </div>
 
