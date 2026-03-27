@@ -87,7 +87,7 @@
 
           <div class="tcard-price">
             <span class="price-label">L'Offrande</span>
-            <span class="price-val">600 €</span>
+            <span class="price-val">800 €</span>
           </div>
           <div class="tcard-temps">⏳ &nbsp;3 mois pour ralentir le rythme</div>
 
@@ -140,7 +140,7 @@
 
           <div class="tcard-price">
             <span class="price-label">L'Offrande</span>
-            <span class="price-val">1 000 €</span>
+            <span class="price-val">1 400 €</span>
           </div>
           <div class="tcard-temps">⏳ &nbsp;3 mois pour s'ancrer</div>
 

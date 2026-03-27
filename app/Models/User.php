@@ -7,10 +7,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable // implements MustVerifyEmail  ← décommenter pour vérif. email
 {
-    use HasFactory, Notifiable, SoftDeletes;
+    use   HasApiTokens,HasFactory, Notifiable, SoftDeletes;
 
     // ─────────────────────────────────────────────────────────────────
     //  CHAMPS ASSIGNABLES EN MASSE
@@ -222,5 +223,26 @@ class User extends Authenticatable // implements MustVerifyEmail  ← décomment
     public function scopeWithoutEspoLead($query)
     {
         return $query->whereNull('espo_lead_id');
+    }
+
+    public function encryptionKey()
+    {
+        return $this->hasOne(UserEncryptionKey::class);
+    }
+
+    public function carnet()
+    {
+        return $this->hasOne(Carnet::class);
+    }
+
+    public function relaxationSessions()
+    {
+        return $this->hasMany(RelaxationSession::class);
+    }
+
+    /** Prénom uniquement */
+    public function firstName(): string
+    {
+        return explode(' ', $this->name)[0];
     }
 }
