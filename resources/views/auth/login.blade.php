@@ -93,7 +93,7 @@
                     <a href="{{ route('traverser') }}">Rejoindre la caravane →</a>
                 </p>
             @endif
-            <p class="lp-quote">« Le désert ne ment jamais. »</p>
+            <p class="lp-quote">« Le sahara ne ment jamais. »</p>
         </div>
 
     </div>

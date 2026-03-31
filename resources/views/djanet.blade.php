@@ -151,7 +151,7 @@
         <div class="item-caption">
           <span class="item-tag">Paysages</span>
           <h3>L'Oasis Sacrée</h3>
-          <p>Le lac miroir au cœur des dunes — symbole de vie au sein du grand désert.</p>
+          <p>Le lac miroir au cœur des dunes — symbole de vie au sein du grand sahara.</p>
         </div>
       </div>
     </div>
@@ -174,7 +174,7 @@
     <div class="item-caption">
       <span class="item-tag">Lumière</span>
       <h3>Le Soleil et les Gardiens</h3>
-      <p>À l'heure où le soleil touche l'horizon, les dromadaires veillent sur l'éternité du désert.</p>
+      <p>À l'heure où le soleil touche l'horizon, les dromadaires veillent sur l'éternité du sahara.</p>
     </div>
   </div>
 </div>
@@ -234,7 +234,7 @@
       <div class="quote-inner">
         <div class="quote-icon">✦</div>
         <blockquote>
-          « Le désert enseigne le silence. Djanet enseigne l'éternité. »
+          « Le sahara enseigne le silence. Djanet enseigne l'éternité. »
         </blockquote>
         <cite>— Parole Touareg</cite>
       </div>

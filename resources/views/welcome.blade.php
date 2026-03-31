@@ -97,7 +97,7 @@
 
         <div class="cta-group">
             <a href="{{ route('traverser') }}" class="btn btn-p">⭐️ &nbsp;Choisir ta traversée</a>
-            <a href="{{ route('odyssee_du_desert') }}" class="btn btn-s">🌵 &nbsp;LA TRAVERSÉE DES NOMADES</a>
+            <a href="{{ route('odyssee_du_desert') }}" class="btn btn-p">🌵 &nbsp;LA TRAVERSÉE DES NOMADES</a>
         </div>
     </section>
 
