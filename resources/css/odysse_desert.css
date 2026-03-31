@@ -175,7 +175,8 @@ body:has(a:hover) .cursor-ring,body:has(button:hover) .cursor-ring{width:46px;he
   padding:1.5rem 3rem;
   display:flex;align-items:center;justify-content:space-between;
   transition:background .5s,padding .4s,backdrop-filter .5s;
-  background:linear-gradient(180deg,rgba(0,0,0,.45) 0%,transparent 100%);
+  /* background:linear-gradient(180deg,rgba(0,0,0,.45) 0%,transparent 100%); */
+  background:#237bc8;
 }
 #nav.scrolled{
   background:rgba(5,5,20,.88);

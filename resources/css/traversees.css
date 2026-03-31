@@ -109,7 +109,8 @@ body{
   padding:1.5rem 3rem;
   display:flex;align-items:center;justify-content:space-between;
   transition:background .5s,padding .4s,backdrop-filter .5s;
-  background:linear-gradient(180deg,rgba(0,0,0,.45) 0%,transparent 100%);
+  /* background:linear-gradient(180deg,rgba(0,0,0,.45) 0%,transparent 100%); */
+  background:#237bc8;
 }
 /* #nav.scrolled{background:var(--nav-scrolled);backdrop-filter:blur(20px);padding:1rem 3rem;
   border-bottom:1px solid var(--nav-border);} */
