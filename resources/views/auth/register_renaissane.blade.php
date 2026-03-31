@@ -47,7 +47,7 @@
       <div class="brand-tagline">La caravane t'attend, Nomade.<br>Trace ta route.</div>
       <div class="brand-div"><span></span><em id="side-icon">🌙</em><span></span></div>
       <blockquote class="brand-quote">
-        « Le désert n'a pas de fin...<br>Il commence là où tu poses ton regard. »
+        « Le sahara n'a pas de fin...<br>Il commence là où tu poses ton regard. »
       </blockquote>
       <div class="brand-steps">
         <div class="step-item"><span class="step-num">01</span>Crée ton compte Nomade</div>
@@ -168,7 +168,9 @@
                     <ul class="trav-feats">
                       <li>3 Dialogues à cœur ouvert</li>
                       <li>Le Lien — fil direct Sentinelle</li>
-                      <li>Le Journal de Bord</li>
+                      <li>Carnet de la traversée</li>
+                      <li>Une méditation par module</li>
+                     <li>Rythme quotidien des nomades (exercice du jour)</li>
                     </ul>
                     <div class="trav-sens">Passer de l'aveuglement à la clarté.</div>
                   </div>
@@ -204,7 +206,11 @@
                     <ul class="trav-feats">
                       <li>6 Dialogues profonds</li>
                       <li>L'Oasis — espace Nomades</li>
-                      <li>L'Ancrage — rituels sensoriels</li>
+                      <li>EFT</li>
+                      <li>Atelier en live avec la sentinelle </li>
+                      <li>Une méditaion par module </li>
+                      <li>Rythme quotidien des nomades (exercice du jour)</li>
+                      
                     </ul>
                     <div class="trav-sens">Ne plus subir, mais habiter pleinement.</div>
                   </div>
@@ -237,9 +243,22 @@
                     <div class="trav-tag">Le dépouillement total pour la renaissance ultime.</div>
                     <div class="trav-price" style="font-style:italic;font-size:.88rem">Prix sur demande</div>
                     <ul class="trav-feats">
-                      <li>L'Appel du Désert — Djanet</li>
+                      <li>Appel du SAHARA</li>
                       <li>Le Silence — 7 jours d'immersion</li>
                       <li>La Mue — accompagnement quotidien</li>
+                      <li>
+                        Accès aux 2 OASIS
+                        <div>
+                          <ul style="margin-top:5px;margin-left:15px;list-style-type:circle">
+                            <li>L'accès à un espace de partage intime avec d'autres Nomades</li>
+                            <li>L'accès privée entre nomades SAHARIEN</li>
+                            
+                          </ul>
+                        </div>
+                      </li>
+                      <li>Une méditaion par module </li>
+                      <li>Atelier en live avec la sentinelle</li>
+                      <li>Rythme quotidien des nomades (exercice du jour)</li>
                     </ul>
                     <div class="trav-sens">Revenir transformé à jamais.</div>
                   </div>

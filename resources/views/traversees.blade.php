@@ -57,7 +57,7 @@
     <span class="h-eyebrow">Renait-Sens · Propositions</span>
     <h1 class="h-title">
       Les Traversées
-      <em>Trois chemins. Un seul désert.</em>
+      <em>Trois chemins. Un seul sahara.</em>
     </h1>
     <div class="h-div"><span></span><em id="hero-icon">🌙</em><span></span></div>
     <p class="h-sub">Ce ne sont pas des offres. Ce sont des odyssées.<br>Choisis celle qui résonne dans tes dunes intérieures.</p>
@@ -111,8 +111,22 @@
             <div class="feat">
               <div class="feat-dot"></div>
               <div class="feat-content">
-                <div class="feat-title">Le Journal de Bord</div>
+                <div class="feat-title">Carnet de la traversée </div>
                 <div class="feat-desc">Un écrin pour tes pensées, pour fixer tes prises de conscience.</div>
+              </div>
+            </div>
+            <div class="feat">
+              <div class="feat-dot"></div>
+              <div class="feat-content">
+                <div class="feat-title">Une méditation par module </div>
+                <div class="feat-desc"></div>
+              </div>
+            </div>
+            <div class="feat">
+              <div class="feat-dot"></div>
+              <div class="feat-content">
+                <div class="feat-title">Rythme quotidien des nomades (exercice du jour)</div>
+                <div class="feat-desc"></div>
               </div>
             </div>
           </div>
@@ -122,7 +136,7 @@
             <div class="sens-txt">Passer de l'aveuglement à la clarté.</div>
           </div>
 
-          <a href="/register" class="tcard-cta outline">Commencer ce chemin →</a>
+          <a href="{{ route('traverser', ['choix' => 'regard']) }}" class="tcard-cta outline">Commencer ce chemin →</a>
         </div>
       </div>
 
@@ -164,8 +178,29 @@
             <div class="feat">
               <div class="feat-dot"></div>
               <div class="feat-content">
-                <div class="feat-title">L'Ancrage</div>
+                <div class="feat-title">EFT</div>
                 <div class="feat-desc">Des rituels sensoriels à pratiquer chez soi pour reconnecter l'esprit au corps.</div>
+              </div>
+            </div>
+            <div class="feat">
+              <div class="feat-dot"></div>
+              <div class="feat-content">
+                <div class="feat-title">Atelier en live avec la sentinelle</div>
+                <div class="feat-desc">  </div>
+              </div>
+            </div>
+            <div class="feat">
+              <div class="feat-dot"></div>
+              <div class="feat-content">
+                <div class="feat-title">Une méditation par module</div>
+                <div class="feat-desc">  </div>
+              </div>
+            </div>
+            <div class="feat">
+              <div class="feat-dot"></div>
+              <div class="feat-content">
+                <div class="feat-title">Rythme quotidien des nomades (exercice du jour)</div>
+                <div class="feat-desc">  </div>
               </div>
             </div>
           </div>
@@ -175,7 +210,7 @@
             <div class="sens-txt">Ne plus subir, mais habiter pleinement sa propre existence.</div>
           </div>
 
-          <a href="/register" class="tcard-cta primary">Choisir la Présence →</a>
+          <a href="{{ route('traverser', ['choix' => 'presence']) }}" class="tcard-cta primary">Choisir la Présence →</a>
         </div>
       </div>
 
@@ -203,7 +238,7 @@
             <div class="feat">
               <div class="feat-dot"></div>
               <div class="feat-content">
-                <div class="feat-title">L'Appel du Désert</div>
+                <div class="feat-title">L'Appel du SAHARA</div>
                 <div class="feat-desc">Une semaine à Djanet, entre roche rouge et sable d'or, Sahara algérien.</div>
               </div>
             </div>
@@ -221,14 +256,48 @@
                 <div class="feat-desc">Un accompagnement quotidien dans les dunes par les Sentinelles, sans artifice, pour laisser mourir l'ancien et naître le nouveau.</div>
               </div>
             </div>
+            <div class="feat">
+              <div class="feat-dot"></div>
+              <div class="feat-content">
+                <div class="feat-title">Accès aux 2 OASIS</div>
+                <div class="feat-desc">
+                    L'accès à un espace de partage intime avec d'autres Nomades <br>
+                    L'accès privée entre nomades SAHARIEN <br>
+                   
+                </div>
+              </div>
+            </div>
+            <div class="feat">
+              <div class="feat-dot"></div>
+              <div class="feat-content">
+                <div class="feat-title">Une méditaion par module </div>
+                <div class="feat-desc"></div>
+              </div>
+            </div>
+            <div class="feat">
+              <div class="feat-dot"></div>
+              <div class="feat-content">
+                <div class="feat-title">Atelier en live avec la sentinelle</div>
+                <div class="feat-desc"></div>
+              </div>
+            </div>
+            <div class="feat">
+              <div class="feat-dot"></div>
+              <div class="feat-content">
+                <div class="feat-title">Rythme quotidien des nomades (exercice du jour)</div>
+                <div class="feat-desc"></div>
+              </div>
+            </div>
           </div>
+          </div>
+           
 
           <div class="tcard-sens">
             <span class="sens-label">Le Sens</span>
             <div class="sens-txt">Vivre l'expérience du sacré pour revenir transformé à jamais.</div>
           </div>
 
-          <a href="/contact" class="tcard-cta outline">Soumettre mon Appel →</a>
+          <a href="{{ route('traverser', ['choix' => 'absolu']) }}" class="tcard-cta outline">Soumettre mon Appel →</a>
         </div>
       </div>
 
@@ -290,7 +359,7 @@
     <span class="cta-label">· L'Appel ·</span>
     <h2 class="cta-title reveal">
       Quelle Traversée<br>t'appelle ?
-      <em>Le désert n'a pas de fin...</em>
+      <em>Le sahara n'a pas de fin...</em>
     </h2>
     <p class="cta-sub reveal rd1">Ne choisis pas avec ta tête. Écoute le grain de sable qui frémit sous tes pieds.</p>
     <div class="cta-btns reveal rd2">
