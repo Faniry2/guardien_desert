@@ -2,76 +2,61 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Cashier\Billable;          // ← CASHIER OBLIGATOIRE
 use Laravel\Sanctum\HasApiTokens;
 
-class User extends Authenticatable // implements MustVerifyEmail  ← décommenter pour vérif. email
+class User extends Authenticatable
 {
-    use   HasApiTokens,HasFactory, Notifiable, SoftDeletes;
+    use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
+    use Billable; // ← TRAIT CASHIER — donne accès à checkout(), newSubscription(), etc.
 
     // ─────────────────────────────────────────────────────────────────
     //  CHAMPS ASSIGNABLES EN MASSE
     // ─────────────────────────────────────────────────────────────────
-
     protected $fillable = [
-        // ── Identité ─────────────────────────────────────────────────
-        'prenom',
-        'nom',
-        'name',               // prénom + nom (colonne standard Laravel Auth)
-        'email',
+        // ── Identité ──────────────────────────────────────────────────
+        'prenom', 'nom', 'name', 'email',
 
-        // ── Téléphone ────────────────────────────────────────────────
-        'telephone',          // numéro complet (indicatif + numéro)
-        'tel_indicatif',      // indicatif seul (+261, +33…)
+        // ── Téléphone ─────────────────────────────────────────────────
+        'telephone', 'tel_indicatif',
+        'whatsapp',           // contact WhatsApp (recommandé)
 
-        // ── Adresse ──────────────────────────────────────────────────
-        'rue',
-        'ville',
-        'region',
-        'codepostal',
-        'pays',               // ISO 3166-1 alpha-2 (MG, FR…)
-        'adresse_complete',   // adresse formatée sur une ligne (générée côté JS)
+        // ── Adresse ───────────────────────────────────────────────────
+        'rue', 'ville', 'region', 'codepostal', 'pays', 'adresse_complete',
 
         // ── Traversée choisie ─────────────────────────────────────────
-        'traversee',          // clé : regard | presence | absolu
-        'traversee_label',    // libellé lisible : Regard / Présence / Absolu
-        'traversee_prix',     // tarif affiché : 600 € / 1 000 € / Prix sur demande
+        'traversee',          // regard | presence | absolu
+        'traversee_label',
+        'traversee_prix',
+
+        // ── Paiement ──────────────────────────────────────────────────
+        // NB: stripe_id, pm_type, pm_last_four, trial_ends_at
+        //     sont gérés automatiquement par Cashier via sa migration
+        'methode',            // stripe | paypal
+        'fraction',           // comptant | 2x | 3x | acompte
+        'statut',             // pending | paye | annule | rembourse
+        'paypal_order_id',    // géré manuellement (PayPal hors Cashier)
+        'paid_at',
 
         // ── Préférences & métadonnées ─────────────────────────────────
-        'timezone',           // fuseau horaire détecté côté navigateur
-        'locale',             // langue navigateur (ex : fr-FR)
-        'theme_preference',   // night | dawn | noon
-        'source',             // utm_source ou document.referrer
-        'registered_at_client', // timestamp ISO côté navigateur
+        'source', 'timezone', 'locale',
+        'theme_preference', 'registered_at_client',
 
         // ── Pacte de l'Aman ───────────────────────────────────────────
-        'pacte_aman_accepted',
-        'pacte_aman_at',
+        'pacte_aman_accepted', 'pacte_aman_at',
 
         // ── Intégration EspoCRM ───────────────────────────────────────
-        'espo_lead_id',       // ID du Lead créé dans EspoCRM
+        'espo_lead_id',
 
         // ── Rôle & sécurité ───────────────────────────────────────────
-        'role',               // nomade | guide | admin
-        'password',
+        'role', 'password',
     ];
 
-    // ─────────────────────────────────────────────────────────────────
-    //  CHAMPS CACHÉS (jamais sérialisés en JSON)
-    // ─────────────────────────────────────────────────────────────────
-
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
-
-    // ─────────────────────────────────────────────────────────────────
-    //  CASTS AUTOMATIQUES
-    // ─────────────────────────────────────────────────────────────────
+    protected $hidden = ['password', 'remember_token'];
 
     protected function casts(): array
     {
@@ -79,6 +64,7 @@ class User extends Authenticatable // implements MustVerifyEmail  ← décomment
             'email_verified_at'   => 'datetime',
             'pacte_aman_accepted' => 'boolean',
             'pacte_aman_at'       => 'datetime',
+            'paid_at'             => 'datetime',
             'password'            => 'hashed',
             'created_at'          => 'datetime',
             'updated_at'          => 'datetime',
@@ -87,49 +73,69 @@ class User extends Authenticatable // implements MustVerifyEmail  ← décomment
     }
 
     // ─────────────────────────────────────────────────────────────────
+    //  CASHIER — Surcharge du nom/email envoyés à Stripe
+    //  (doc : https://laravel.com/docs/12.x/billing#syncing-customer-data-with-stripe)
+    // ─────────────────────────────────────────────────────────────────
+
+    public function stripeName(): string|null
+    {
+        return $this->prenom . ' ' . $this->nom;
+    }
+
+    public function stripeEmail(): string|null
+    {
+        return $this->email;
+    }
+
+    public function stripePhone(): string|null
+    {
+        return $this->telephone;
+    }
+
+    // ─────────────────────────────────────────────────────────────────
     //  CONSTANTES — CATALOGUE DES TRAVERSÉES
-    //  Source de vérité partagée avec RegisteredUserController.
     // ─────────────────────────────────────────────────────────────────
 
     public const TRAVERSEES = [
         'regard' => [
-            'label' => 'Regard',
-            'prix'  => '600 €',
-            'tag'   => 'Se poser, cesser de fuir et enfin se voir.',
-            'feats' => '3 Dialogues à cœur ouvert|Le Lien — fil direct Sentinelle|Le Journal de Bord',
-            'sens'  => 'Passer de l\'aveuglement à la clarté.',
+            'label'        => 'Regard',
+            'prix'         => '800 €',
+            'montant'      => 800,
+            'stripe_price' => 'price_REGARD_800',   // ← remplacer par ton vrai Price ID
+            'tag'          => 'Se poser, cesser de fuir et enfin se voir.',
+            'sens'         => 'Passer de l\'aveuglement à la clarté.',
         ],
         'presence' => [
-            'label' => 'Présence',
-            'prix'  => '1 000 €',
-            'tag'   => 'Habiter son corps, ses sens et chaque instant.',
-            'feats' => '6 Dialogues profonds|L\'Oasis — espace Nomades|L\'Ancrage — rituels sensoriels',
-            'sens'  => 'Ne plus subir, mais habiter pleinement.',
+            'label'        => 'Présence',
+            'prix'         => '1 400 €',
+            'montant'      => 1400,
+            'stripe_price' => 'price_PRESENCE_1400', // ← remplacer
+            'tag'          => 'Habiter son corps, ses sens et chaque instant.',
+            'sens'         => 'Ne plus subir, mais habiter pleinement.',
         ],
         'absolu' => [
-            'label' => 'Absolu',
-            'prix'  => 'Prix sur demande',
-            'tag'   => 'Le dépouillement total pour la renaissance ultime.',
-            'feats' => 'L\'Appel du Désert — Djanet|Le Silence — 7 jours d\'immersion|La Mue — accompagnement quotidien',
-            'sens'  => 'Revenir transformé à jamais.',
+            'label'        => 'Absolu',
+            'prix'         => 'Prix sur demande',
+            'montant'      => 4000,
+            'stripe_price' => 'price_ABSOLU_4000',   // ← remplacer
+            'tag'          => 'Le dépouillement total pour la renaissance ultime.',
+            'sens'         => 'Revenir transformé à jamais.',
         ],
     ];
 
+    public const METHODES  = ['stripe', 'paypal'];
+    public const FRACTIONS = ['comptant', '2x', '3x', 'acompte'];
+    public const STATUTS   = ['pending', 'paye', 'annule', 'rembourse'];
+
     // ─────────────────────────────────────────────────────────────────
-    //  ACCESSEURS
+    //  ACCESSEURS — IDENTITÉ
     // ─────────────────────────────────────────────────────────────────
 
-    /**
-     * Nom d'affichage complet : Prénom NOM.
-     */
     public function getFullNameAttribute(): string
     {
         return trim($this->prenom . ' ' . $this->nom);
     }
 
-    /**
-     * Initiales (ex : "AN" pour Andry Nomade).
-     */
     public function getInitialsAttribute(): string
     {
         return mb_strtoupper(
@@ -138,111 +144,91 @@ class User extends Authenticatable // implements MustVerifyEmail  ← décomment
         );
     }
 
-    /**
-     * Données complètes de la traversée choisie depuis le catalogue.
-     * Retourne null si aucune traversée n'est définie.
-     */
+    public function firstName(): string
+    {
+        return $this->prenom ?? explode(' ', $this->name)[0];
+    }
+
+    // ─────────────────────────────────────────────────────────────────
+    //  ACCESSEURS — TRAVERSÉE
+    // ─────────────────────────────────────────────────────────────────
+
     public function getTraverseeDataAttribute(): ?array
     {
         return self::TRAVERSEES[$this->traversee] ?? null;
     }
 
-    /**
-     * Indique si le lead a déjà été envoyé à EspoCRM.
-     */
-    public function getHasEspoLeadAttribute(): bool
+    public function getLibelleTraverseeAttribute(): string
     {
-        return ! empty($this->espo_lead_id);
+        return match($this->traversee) {
+            'regard'   => 'Renaît-Sens Essentiel — Regard',
+            'presence' => 'Renaît-Sens Avancé — Présence',
+            'absolu'   => 'Renaît-Sens Premium — Absolu',
+            default    => 'Traversée inconnue',
+        };
     }
 
-    /**
-     * Retourne true si l'utilisateur est admin.
-     */
-    public function getIsAdminAttribute(): bool
+    public function getMontantAttribute(): int
     {
-        return $this->role === 'admin';
+        return self::TRAVERSEES[$this->traversee]['montant'] ?? 0;
     }
 
-    /**
-     * Retourne true si l'utilisateur est guide.
-     */
-    public function getIsGuideAttribute(): bool
+    // ─────────────────────────────────────────────────────────────────
+    //  ACCESSEURS — PAIEMENT
+    // ─────────────────────────────────────────────────────────────────
+
+    public function getIsPayeAttribute(): bool
     {
-        return $this->role === 'guide';
+        return $this->statut === 'paye';
     }
 
-    /**
-     * Retourne true si l'utilisateur est un simple Nomade.
-     */
-    public function getIsNomadeAttribute(): bool
+    public function getHasCarnetAccessAttribute(): bool
     {
-        return $this->role === 'nomade';
+        return $this->statut === 'paye';
     }
+
+    public function getFractionLabelAttribute(): string
+    {
+        return match($this->fraction) {
+            '2x'      => '2 fois — 2 × ' . intval($this->montant / 2) . ' €',
+            '3x'      => '3 fois — 3 × ' . intval($this->montant / 3) . ' €',
+            'acompte' => 'Acompte 1 000 € + 3 × 1 000 €',
+            default   => $this->montant . ' € comptant',
+        };
+    }
+
+    // ─────────────────────────────────────────────────────────────────
+    //  ACCESSEURS — RÔLE
+    // ─────────────────────────────────────────────────────────────────
+
+    public function getIsAdminAttribute(): bool  { return $this->role === 'admin'; }
+    public function getIsGuideAttribute(): bool  { return $this->role === 'guide'; }
+    public function getIsNomadeAttribute(): bool { return $this->role === 'nomade'; }
+    public function getHasEspoLeadAttribute(): bool { return ! empty($this->espo_lead_id); }
 
     // ─────────────────────────────────────────────────────────────────
     //  SCOPES
     // ─────────────────────────────────────────────────────────────────
 
-    /** Filtre les Nomades (rôle = nomade). */
-    public function scopeNomades($query)
-    {
-        return $query->where('role', 'nomade');
-    }
+    public function scopeNomades($q)  { return $q->where('role', 'nomade'); }
+    public function scopeGuides($q)   { return $q->where('role', 'guide'); }
+    public function scopeAdmins($q)   { return $q->where('role', 'admin'); }
+    public function scopePaye($q)     { return $q->where('statut', 'paye'); }
+    public function scopePending($q)  { return $q->where('statut', 'pending'); }
+    public function scopeAnnule($q)   { return $q->where('statut', 'annule'); }
 
-    /** Filtre les Guides. */
-    public function scopeGuides($query)
-    {
-        return $query->where('role', 'guide');
-    }
+    public function scopeByTraversee($q, string $t) { return $q->where('traversee', $t); }
+    public function scopeByMethode($q, string $m)   { return $q->where('methode', $m); }
+    public function scopeByCountry($q, string $c)   { return $q->where('pays', strtoupper($c)); }
+    public function scopePacteAccepted($q)          { return $q->where('pacte_aman_accepted', true); }
+    public function scopeWithEspoLead($q)    { return $q->whereNotNull('espo_lead_id'); }
+    public function scopeWithoutEspoLead($q) { return $q->whereNull('espo_lead_id'); }
 
-    /** Filtre par pays (ISO 3166-1 alpha-2). */
-    public function scopeByCountry($query, string $countryCode)
-    {
-        return $query->where('pays', strtoupper($countryCode));
-    }
+    // ─────────────────────────────────────────────────────────────────
+    //  RELATIONS
+    // ─────────────────────────────────────────────────────────────────
 
-    /** Filtre les utilisateurs ayant accepté le Pacte de l'Aman. */
-    public function scopePacteAccepted($query)
-    {
-        return $query->where('pacte_aman_accepted', true);
-    }
-
-    /** Filtre par traversée choisie. */
-    public function scopeByTraversee($query, string $traversee)
-    {
-        return $query->where('traversee', $traversee);
-    }
-
-    /** Filtre les utilisateurs déjà synchronisés avec EspoCRM. */
-    public function scopeWithEspoLead($query)
-    {
-        return $query->whereNotNull('espo_lead_id');
-    }
-
-    /** Filtre les utilisateurs à synchroniser avec EspoCRM (pas encore de lead). */
-    public function scopeWithoutEspoLead($query)
-    {
-        return $query->whereNull('espo_lead_id');
-    }
-
-    public function encryptionKey()
-    {
-        return $this->hasOne(UserEncryptionKey::class);
-    }
-
-    public function carnet()
-    {
-        return $this->hasOne(Carnet::class);
-    }
-
-    public function relaxationSessions()
-    {
-        return $this->hasMany(RelaxationSession::class);
-    }
-
-    /** Prénom uniquement */
-    public function firstName(): string
-    {
-        return explode(' ', $this->name)[0];
-    }
+    public function encryptionKey()      { return $this->hasOne(UserEncryptionKey::class); }
+    public function carnet()             { return $this->hasOne(Carnet::class); }
+    public function relaxationSessions() { return $this->hasMany(RelaxationSession::class); }
 }

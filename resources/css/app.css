@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 
-/* ══ Liens or vif — L'oasis & Djanet — visibles dans les 3 modes ══ */
+/* ══ Liens or vif — L'oasis & Djanet — visibles dans les 3 modes ══
  
 header#nav nav ul li a[href*="bulle"],
 header#nav nav ul li a[href*="djanet"] {
@@ -24,28 +24,28 @@ header#nav nav ul li a[href*="djanet"]:hover {
 }
  
 /* Mode aube — fond peut être clair, on monte le contraste */
-[data-mode="dawn"] header#nav nav ul li a[href*="bulle"],
+/* [data-mode="dawn"] header#nav nav ul li a[href*="bulle"],
 [data-mode="dawn"] header#nav nav ul li a[href*="djanet"] {
   color: #E6AC00 !important;
   text-shadow:
     0 0 8px rgba(230, 172, 0, 0.70),
     0 0 18px rgba(230, 172, 0, 0.35);
-}
+} */
  
 /* Mode midi — fond clair, on fonce légèrement pour contraste */
-[data-mode="noon"] header#nav nav ul li a[href*="bulle"],
+/* [data-mode="noon"] header#nav nav ul li a[href*="bulle"],
 [data-mode="noon"] header#nav nav ul li a[href*="djanet"] {
   color: #A07800 !important;
   text-shadow:
     0 0 6px rgba(160, 120, 0, 0.50),
     0 0 14px rgba(160, 120, 0, 0.22);
-}
+} */
  
 /* Mode nuit — plein éclat */
-[data-mode="night"] header#nav nav ul li a[href*="bulle"],
+/* [data-mode="night"] header#nav nav ul li a[href*="bulle"],
 [data-mode="night"] header#nav nav ul li a[href*="djanet"] {
   color: #F5CA2E !important;
   text-shadow:
     0 0 12px rgba(245, 202, 46, 0.75),
     0 0 26px rgba(245, 202, 46, 0.40);
-}
+} */ 
