@@ -12,21 +12,22 @@
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
         <link rel="manifest" href="/site.webmanifest" />
         
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Philosopher:ital@0;1&display=swap" rel="stylesheet">
+        
+       
+        <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
 
         <title>@yield('title', 'Renait-Sens — L\'Ombre du Tassili<') </title>
 
        
 
         <!-- Scripts -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
+        @vite([ 'resources/js/app.js'])
 
        
         {{-- CSS spécifique page --}}
         @stack('styles')
     </head>
-    <body class="font-sans antialiased bg-white text-gray-800">
+    <body >
         
 
         <!-- Page Content -->

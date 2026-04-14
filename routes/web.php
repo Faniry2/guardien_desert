@@ -7,15 +7,14 @@ use App\Http\Controllers\Espace\DashboardController;
 use App\Http\Controllers\Espace\CarnetController;
 use App\Http\Controllers\Espace\DetenteController;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\InscriptionController;
 // ── Pages publiques ────────────────────────────────────────────
-Route::get('/', fn() => view('welcome'));
-Route::get('/odyssee_du_desert', fn() => view('odyssee_du_desert'))->name('odyssee_du_desert');
-Route::get('/rejoint-la-travserser', fn() => view('auth.register_renaissane'))->name('traverser');
-Route::get('/traversees', fn() => view('traversees'))->name('traversees');
+Route::get('/', fn() => view('carnet.index'))->name('home');
+Route::get('/renait-sens', fn() => view('renaitsens.index'))->name('renait_sens');
+Route::get('/traversees', fn() => view('traversee.index'))->name('traversees');
 Route::get('/djanet', fn() => view('djanet'))->name('djanet');
 
-Route::post('register', [RegisteredUserController::class, 'store'])->name('register');
+// Route::post('register', [RegisteredUserController::class, 'store'])->name('register');
 
 
 // ── Auth (Breeze) ──────────────────────────────────────────────
@@ -55,3 +54,20 @@ Route::middleware(['auth', 'verified'])
 
         Route::get('/detente/meditations', [DetenteController::class, 'meditations'])->name('detente.meditations');
     });
+
+
+// ══ INSCRIPTION + PAIEMENT ══
+ 
+// ══ INSCRIPTION ════════════════════════════════════════════════════
+// ══ INSCRIPTION ════════════════════════════════════════════════════
+Route::prefix('inscription')->name('inscription.')->group(function () {
+    Route::get('/',               [InscriptionController::class, 'show'])           ->name('form');
+    Route::post('/checkout',      [InscriptionController::class, 'checkout'])       ->name('checkout');
+    Route::get('/success',        [InscriptionController::class, 'success'])        ->name('success');
+    Route::get('/paypal/success', [InscriptionController::class, 'paypalSuccess'])  ->name('paypal.success');
+    Route::get('/cancel',         [InscriptionController::class, 'cancel'])         ->name('cancel');
+    // Téléchargement facture PDF (doc : composer require dompdf/dompdf)
+    Route::get('/invoice/{invoice}', [InscriptionController::class, 'downloadInvoice'])
+        ->middleware('auth')
+        ->name('invoice');
+});

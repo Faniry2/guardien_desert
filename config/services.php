@@ -48,5 +48,16 @@ return [
         // Timeout HTTP en secondes
         'timeout'    => env('ESPOCRM_TIMEOUT', 10),
     ],
+    'stripe' => [
+    'key'    => env('STRIPE_KEY'),
+    'secret' => env('STRIPE_SECRET'),
+    'prices' => [
+        'regard_comptant'   => env('STRIPE_PRICE_REGARD_COMPTANT'),
+        'presence_comptant' => env('STRIPE_PRICE_PRESENCE_COMPTANT'),
+        'presence_2x'       => env('STRIPE_PRICE_PRESENCE_2X'),
+        'presence_3x'       => env('STRIPE_PRICE_PRESENCE_3X'),
+        'absolu_comptant'   => env('STRIPE_PRICE_ABSOLU_COMPTANT'),
+    ],
+    ],
 
 ];
