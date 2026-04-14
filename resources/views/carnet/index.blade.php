@@ -51,8 +51,8 @@
       C'est un rite de passage : accueillir, ralentir, nommer, voir, ressentir, ouvrir.
     </p>
     <div class="hero-cta">
-      <a href="#" class="btn-or">📖 &nbsp;Accéder au Carnet</a>
-      <a href="#pages" class="btn-ghost">Découvrir les 9 Pages</a>
+      <a href="{{ route('login') }}" class="btn-or">📖 &nbsp;Accéder au Carnet</a>
+      <a href="{{ route('traversees') }}" class="btn-ghost">Les Traversées</a>
     </div>
   </div>
   <div class="hero-scroll"><span>Descendre</span><div class="scroll-line"></div></div>
@@ -218,8 +218,8 @@
     <h2 class="cta-title">Entre dans le vrai<em>Le premier pas commence ici</em></h2>
     <p class="cta-sub">10 à 20 minutes.<br>Honnêteté. Clarté. Un premier pas juste pour toi.</p>
     <div class="cta-btns">
-      <a href="#" class="btn-or">📖 &nbsp;Accéder au Carnet</a>
-      <a href="#traversees" class="btn-ghost">🌵 &nbsp;Choisir ma Traversée</a>
+      <a href="{{ route('login') }}" class="btn-or">📖 &nbsp;Accéder au Carnet</a>
+      <a href="{{ route('traversees') }}" class="btn-ghost">🌵 &nbsp;Choisir ma Traversée</a>
     </div>
   </div>
 </section>
