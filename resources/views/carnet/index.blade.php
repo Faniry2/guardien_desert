@@ -170,7 +170,7 @@
             <div class="trophy-info">
               <span class="tcard-num">Traversée · 01</span>
               <div class="tcard-name">Regard</div>
-              <div class="tcard-sub">L'éveil du premier regard</div>
+              <div class="tcard-sub"><a href="{{route('traversees')}}" class="btn-ghost">L'éveil du premier regard</a></div>
             </div>
           </div>
         </div>
@@ -184,7 +184,7 @@
             <div class="trophy-info">
               <span class="tcard-num">Traversée · 02</span>
               <div class="tcard-name">Présence</div>
-              <div class="tcard-sub">L'art d'être là, entier</div>
+              <div class="tcard-sub"><a href="{{route('traversees')}}" class="btn-ghost">L'art d'être là, entier</a></div>
             </div>
           </div>
         </div>
@@ -198,7 +198,7 @@
             <div class="trophy-info">
               <span class="tcard-num">Traversée · 03</span>
               <div class="tcard-name">Absolu</div>
-              <div class="tcard-sub">Djanet, l'ultime horizon</div>
+              <div class="tcard-sub"><a href="{{route('traversees')}}" class="btn-ghost">Djanet, l'ultime horizon</a></div>
             </div>
           </div>
         </div>

@@ -57,24 +57,17 @@ Route::middleware(['auth', 'verified'])
 
 
 // ══ INSCRIPTION + PAIEMENT ══
+ 
+// ══ INSCRIPTION ════════════════════════════════════════════════════
+// ══ INSCRIPTION ════════════════════════════════════════════════════
 Route::prefix('inscription')->name('inscription.')->group(function () {
-
-    // Formulaire
-    Route::get('/',        [InscriptionController::class, 'show'])    ->name('form');
-
-    // Checkout (POST depuis le form)
-    Route::post('/checkout', [InscriptionController::class, 'checkout'])->name('checkout');
-
-    // Succès Stripe
-    Route::get('/success',   [InscriptionController::class, 'success']) ->name('success');
-
-    // Succès PayPal
-    Route::get('/paypal/success', [InscriptionController::class, 'paypalSuccess'])->name('paypal.success');
-
-    // Annulation
-    Route::get('/cancel',    [InscriptionController::class, 'cancel'])  ->name('cancel');
+    Route::get('/',               [InscriptionController::class, 'show'])           ->name('form');
+    Route::post('/checkout',      [InscriptionController::class, 'checkout'])       ->name('checkout');
+    Route::get('/success',        [InscriptionController::class, 'success'])        ->name('success');
+    Route::get('/paypal/success', [InscriptionController::class, 'paypalSuccess'])  ->name('paypal.success');
+    Route::get('/cancel',         [InscriptionController::class, 'cancel'])         ->name('cancel');
+    // Téléchargement facture PDF (doc : composer require dompdf/dompdf)
+    Route::get('/invoice/{invoice}', [InscriptionController::class, 'downloadInvoice'])
+        ->middleware('auth')
+        ->name('invoice');
 });
-
-// Webhook Stripe (hors CSRF)
-Route::post('/webhook/stripe', [InscriptionController::class, 'webhook'])
-    ->name('stripe.webhook');

@@ -761,7 +761,7 @@ footer{
             <span class="sens-label">Le Sens</span>
             <div class="sens-txt">Passer de l'aveuglement à la clarté.</div>
           </div>
-          <a href="{{ route('inscription.form') }}" class="tcard-cta outline">Commencer ce chemin →</a>
+          <a href="{{ route('inscription.form', ['choix' => 'regard']) }}"" class="tcard-cta outline">Commencer ce chemin →</a>
         </div>
       </div>
 
@@ -813,7 +813,7 @@ footer{
             <span class="sens-label">Le Sens</span>
             <div class="sens-txt">Ne plus subir, mais habiter pleinement sa propre existence.</div>
           </div>
-          <a href=""{{route('inscription.form')}}"" class="tcard-cta primary">Choisir la Présence →</a>
+          <a href="{{ route('inscription.form', ['choix' => 'presence']) }}" class="tcard-cta primary">Choisir la Présence →</a>
         </div>
       </div>
 
@@ -869,7 +869,7 @@ footer{
             <span class="sens-label">Le Sens</span>
             <div class="sens-txt">Vivre l'expérience du sacré pour revenir transformé à jamais.</div>
           </div>
-          <a href="{{route('inscription.form')}}" class="tcard-cta outline">Soumettre mon Appel →</a>
+          <a href="{{ route('inscription.form', ['choix' => 'absolu']) }}" class="tcard-cta outline">Soumettre mon Appel →</a>
         </div>
       </div>
 

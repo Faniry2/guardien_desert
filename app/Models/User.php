@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Cashier\Billable;          // ← CASHIER OBLIGATOIRE
 use Laravel\Sanctum\HasApiTokens;
+use Laravel\Cashier\Cashier;
 
 class User extends Authenticatable
 {
@@ -231,4 +232,6 @@ class User extends Authenticatable
     public function encryptionKey()      { return $this->hasOne(UserEncryptionKey::class); }
     public function carnet()             { return $this->hasOne(Carnet::class); }
     public function relaxationSessions() { return $this->hasMany(RelaxationSession::class); }
-}
+
+  
+ }

@@ -33,7 +33,7 @@ const TRAVERSEES = {
   absolu: {
     nom:'Traversée Absolu', tagline:'Le dépouillement total pour la renaissance ultime.',
     metal:'Or', metalClass:'metal-or', badge:'✦ Or',
-    prix:4000, prixLabel:'4 000 €',
+    prix:4000, prixLabel:'Prix sur demande', // Prix sur-mesure, affiché dans les détails de fractionnement
     fractions:['acompte'], stripeKey:'price_absolu_4000'
   }
 };
@@ -129,40 +129,65 @@ function selectFraction(el,val){
 }
 
 // ══ SOUMISSION ══
-function submitPay(e){
+function submitPay(e) {
   e.preventDefault();
-  if(!document.getElementById('cgv').checked){
+
+  if (!document.getElementById('cgv').checked) {
     alert('Merci d\'accepter les CGV pour continuer.');
     return;
   }
-  const methode = document.querySelector('input[name="methode"]:checked').value;
+
+  const methode  = document.querySelector('input[name="methode"]:checked')?.value || 'stripe';
   const fraction = document.querySelector('input[name="fraction"]:checked')?.value || 'comptant';
-  const btn = document.getElementById('btn-pay');
-  btn.disabled=true;
-  document.getElementById('btn-pay-txt').textContent='Redirection en cours...';
+  const btn      = document.getElementById('btn-pay');
 
-  // Collecter les données du form
-  const form = document.getElementById('inscription-form');
-  const formData = new FormData(form);
-  formData.append('methode_paiement', methode);
-  formData.append('fraction', fraction);
-  formData.append('traversee', choix);
+  btn.disabled = true;
+  document.getElementById('btn-pay-txt').textContent = 'Redirection en cours...';
 
-  // POST vers Laravel
+  // Construire manuellement — évite les doublons du FormData
+  const data = new FormData();
+  data.append('prenom',           document.querySelector('input[name="prenom"]').value);
+  data.append('nom',              document.querySelector('input[name="nom"]').value);
+  data.append('email',            document.querySelector('input[name="email"]').value);
+  data.append('adresse_complete', document.querySelector('input[name="adresse"]').value);
+  data.append('telephone',        document.querySelector('input[name="telephone"]').value);
+  data.append('whatsapp',         document.querySelector('input[name="whatsapp"]')?.value || '');
+  data.append('source',           document.querySelector('select[name="source"]')?.value || '');
+  data.append('traversee',        choix);
+  data.append('methode_paiement', methode);
+  data.append('fraction',         fraction);
+
   fetch('/inscription/checkout', {
-    method:'POST',
-    headers:{'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || ''},
-    body: formData
+    method:  'POST',
+    headers: {
+      'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || ''
+    },
+    body: data
   })
-  .then(r=>r.json())
-  .then(data=>{
-    if(data.url){ window.location.href = data.url; }
-    else{ alert('Erreur : '+data.message); btn.disabled=false; document.getElementById('btn-pay-txt').textContent='Procéder au paiement sécurisé'; }
+  .then(r => r.text().then(text => {
+    console.log('Status:', r.status);
+    console.log('Response:', text);
+    try {
+      return JSON.parse(text);
+    } catch(e) {
+      // Ouvrir la page d'erreur dans un nouvel onglet
+      const win = window.open('', '_blank');
+      win.document.write(text);
+      throw new Error('Réponse non-JSON reçue');
+    }
+  }))
+  .then(data => {
+    if (data.url) {
+      window.location.href = data.url;
+    } else {
+      alert('Erreur : ' + (data.message || 'Erreur inconnue'));
+      btn.disabled = false;
+      document.getElementById('btn-pay-txt').textContent = 'Procéder au paiement sécurisé';
+    }
   })
-  .catch((e)=>{
-    btn.disabled=false;
-    document.getElementById('btn-pay-txt').textContent='Procéder au paiement sécurisé';
-    console.error(e);
-    alert('Une erreur est survenue. Veuillez réessayer.');
+  .catch(e => {
+    console.error('Erreur:', e);
+    btn.disabled = false;
+    document.getElementById('btn-pay-txt').textContent = 'Procéder au paiement sécurisé';
   });
 }
