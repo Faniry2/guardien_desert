@@ -17,7 +17,9 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
 
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    @vite(['resources/css/app.css','resources/css/lmp.css','resources/js/app.js'])
+
     @stack('styles')
     <style>
         * { box-sizing: border-box; }
@@ -102,7 +104,9 @@
         @include('partials.mini-player')
     @endif
 
-    @vite(['resources/js/crypto.js'])
+    @include('partials.lampe-magique')
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    @vite(['resources/js/crypto.js','resources/js/lmp.js'])
    
     @stack('scripts')
 </body>

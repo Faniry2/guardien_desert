@@ -159,7 +159,8 @@ function setupForm() {
             this.loading = true;
             this.error = '';
             try {
-                await fetch('/sanctum/csrf-cookie', { credentials: 'include' });
+                //await fetch('/sanctum/csrf-cookie', { credentials: 'include' });
+                //const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
                 await window.JournalCrypto.setupEncryption(this.passphrase, this.hint);
                 window.location.href = '{{ route("carnet.index") }}';
             } catch(e) {

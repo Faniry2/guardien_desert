@@ -26,6 +26,7 @@ class InscriptionController extends Controller
     // ─────────────────────────────────────────────────────────────────
     public function checkout(Request $request)
     {
+        $plainPassword = str()->random(12);
         $validated = $request->validate([
             'prenom'           => 'required|string|max:100',
             'nom'              => 'required|string|max:100',
@@ -58,7 +59,7 @@ class InscriptionController extends Controller
             'fraction'         => $validated['fraction'] ?? 'comptant',
             'statut'           => 'pending',
             'role'             => 'nomade',
-            'password'         => Hash::make(str()->random(32)),
+            'password'         => Hash::make($plainPassword),
         ]);
 
         // ✅ Connecter le user
@@ -71,6 +72,8 @@ class InscriptionController extends Controller
         // // Crée le customer Stripe + stocke stripe_id en BDD
         // $user->createOrGetStripeCustomer();
 
+        session(['temp_password_' . $user->id => $plainPassword]);
+
         if ($validated['methode_paiement'] === 'stripe') {
             return $this->stripeCheckout($user);
         }
@@ -82,22 +85,43 @@ class InscriptionController extends Controller
     //  STRIPE — via Cashier (doc officielle)
     // ─────────────────────────────────────────────────────────────────
     private function stripeCheckout(User $user)
-{
-    $traversee = $user->traversee;
-    $fraction  = $user->fraction;
-    $data      = User::TRAVERSEES[$traversee];
- 
-    // Méthodes de paiement — Card + PayPal + Apple/Google Pay
-    $paymentMethods = ['card', 'paypal'];
- 
-    try {
- 
-        // ── Abonnement 2x ou 3x ──────────────────────────────────────
-        if (in_array($fraction, ['2x', '3x'])) {
-            $priceId = config('services.stripe.prices.' . $traversee . '_' . $fraction);
- 
-            $session = $user->newSubscription('default', $priceId)
-                ->checkout([
+    {
+        $traversee = $user->traversee;
+        $fraction  = $user->fraction;
+        $data      = User::TRAVERSEES[$traversee];
+    
+        // Méthodes de paiement — Card + PayPal + Apple/Google Pay
+        $paymentMethods = ['card', 'paypal'];
+    
+        try {
+    
+            // ── Abonnement 2x ou 3x ──────────────────────────────────────
+            if (in_array($fraction, ['2x', '3x'])) {
+                $priceId = config('services.stripe.prices.' . $traversee . '_' . $fraction);
+    
+                $session = $user->newSubscription('default', $priceId)
+                    ->checkout([
+                        'payment_method_types' => $paymentMethods,
+                        'success_url' => route('inscription.success')
+                            . '?session_id={CHECKOUT_SESSION_ID}&user=' . $user->id,
+                        'cancel_url'  => route('inscription.cancel')
+                            . '?user=' . $user->id,
+                        'metadata' => [
+                            'user_id'   => $user->id,
+                            'traversee' => $traversee,
+                            'fraction'  => $fraction,
+                        ],
+                        'locale' => 'fr',
+                    ]);
+    
+                return response()->json(['url' => $session->url]);
+            }
+    
+            // ── Paiement unique — Comptant ────────────────────────────────
+            if ($fraction === 'comptant') {
+                $priceId = config('services.stripe.prices.' . $traversee . '_comptant');
+    
+                $session = $user->checkout([$priceId => 1], [
                     'payment_method_types' => $paymentMethods,
                     'success_url' => route('inscription.success')
                         . '?session_id={CHECKOUT_SESSION_ID}&user=' . $user->id,
@@ -108,36 +132,15 @@ class InscriptionController extends Controller
                         'traversee' => $traversee,
                         'fraction'  => $fraction,
                     ],
-                    'locale' => 'fr',
-                ]);
- 
-            return response()->json(['url' => $session->url]);
-        }
- 
-        // ── Paiement unique — Comptant ────────────────────────────────
-        if ($fraction === 'comptant') {
-            $priceId = config('services.stripe.prices.' . $traversee . '_comptant');
- 
-            $session = $user->checkout([$priceId => 1], [
-                'payment_method_types' => $paymentMethods,
-                'success_url' => route('inscription.success')
-                    . '?session_id={CHECKOUT_SESSION_ID}&user=' . $user->id,
-                'cancel_url'  => route('inscription.cancel')
-                    . '?user=' . $user->id,
-                'metadata' => [
-                    'user_id'   => $user->id,
-                    'traversee' => $traversee,
-                    'fraction'  => $fraction,
-                ],
-                'locale'           => 'fr',
-                'invoice_creation' => [
-                    'enabled'      => true,
-                    'invoice_data' => [
-                        'footer'   => 'TVA non applicable — Art. 293B du CGI',
-                        'metadata' => ['user_id' => $user->id],
+                    'locale'           => 'fr',
+                    'invoice_creation' => [
+                        'enabled'      => true,
+                        'invoice_data' => [
+                            'footer'   => 'TVA non applicable — Art. 293B du CGI',
+                            'metadata' => ['user_id' => $user->id],
+                        ],
                     ],
-                ],
-            ]);
+                ]);
  
             return response()->json(['url' => $session->url]);
         }
@@ -169,10 +172,10 @@ class InscriptionController extends Controller
             return response()->json(['url' => $session->url]);
         }
  
-    } catch (\Exception $e) {
-        Log::error('Stripe checkout error: ' . $e->getMessage());
-        return response()->json(['message' => 'Erreur Stripe. Veuillez réessayer.'], 500);
-    }
+        } catch (\Exception $e) {
+            Log::error('Stripe checkout error: ' . $e->getMessage());
+            return response()->json(['message' => 'Erreur Stripe. Veuillez réessayer.'], 500);
+        }
     }
     // ─────────────────────────────────────────────────────────────────
     //  PAYPAL — via srmklive/paypal
@@ -250,9 +253,10 @@ class InscriptionController extends Controller
                     'statut'  => 'paye',
                     'paid_at' => now(),
                 ]);
-
+                $tempPassword = session('temp_password_' . $user->id);
+                session()->forget('temp_password_' . $user->id); 
                 Mail::to($user->email)->send(new ConfirmationMail($user));
-                Mail::to($user->email)->queue(new OnboardingMail($user));
+                Mail::to($user->email)->queue(new OnboardingMail($user, $tempPassword));
             }
 
         } catch (\Exception $e) {

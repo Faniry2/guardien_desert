@@ -37,34 +37,45 @@ class EncryptionKeyController extends Controller
      * Configure la clé de chiffrement pour la première fois.
      * Reçoit le salt + key_check_hash — JAMAIS la clé elle-même.
      */
-    public function setup(Request $request): JsonResponse
+        public function setup(Request $request): JsonResponse
     {
+     
+
         $validated = $request->validate([
             'salt_hex'       => ['required', 'string', 'size:64', 'regex:/^[a-f0-9]+$/'],
             'key_check_hash' => ['required', 'string', 'max:512'],
             'hint'           => ['nullable', 'string', 'max:255'],
         ]);
 
+
         // Vérifier que la clé n'est pas déjà configurée
         if ($request->user()->encryptionKey?->is_configured) {
+            \Log::info('Clé déjà configurée');
             return response()->json(['error' => 'Clé déjà configurée'], 409);
         }
 
-        $request->user()->encryptionKey()->updateOrCreate(
-            ['user_id' => $request->user()->id],
-            array_merge($validated, [
-                'is_configured' => true,
-                'configured_at' => now(),
-            ])
-        );
+        try {
+            $request->user()->encryptionKey()->updateOrCreate(
+                ['user_id' => $request->user()->id],
+                array_merge($validated, [
+                    'is_configured' => true,
+                    'configured_at' => now(),
+                ])
+            );
+            
 
-        // Créer le carnet vide
-        $request->user()->carnet()->firstOrCreate([
-            'user_id' => $request->user()->id,
-        ], [
-            'start_date' => today(),
-            'status'     => 'active',
-        ]);
+            $request->user()->carnet()->firstOrCreate([
+                'user_id' => $request->user()->id,
+            ], [
+                'start_date' => today(),
+                'status'     => 'active',
+            ]);
+            
+
+        } catch (\Exception $e) {
+           
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
 
         return response()->json(['success' => true]);
     }

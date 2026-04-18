@@ -20,7 +20,7 @@
 
 <!-- NAV -->
 <nav id="nav">
-  <a href="#" class="nav-brand">Renait-Sens</a>
+  <a href="{{ route('home') }}" class="nav-brand">Renait-Sens</a>
   <span class="nav-step">Étape 1 sur 2 — Inscription</span>
 </nav>
 

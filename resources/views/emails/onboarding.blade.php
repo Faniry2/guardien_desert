@@ -41,7 +41,7 @@
 
   <div class="content">
     <h1>
-      {{ $inscription->prenom }}, la traversée commence maintenant. 🌵
+      {{ $user->prenom }}, la traversée commence maintenant. 🌵
     </h1>
 
     <blockquote>
@@ -86,7 +86,7 @@
       </div>
     </div>
 
-    @if($inscription->traversee === 'absolu')
+    @if($user->traversee === 'absolu')
     <div class="step-block" style="border-left-color:rgba(255,215,0,.5);">
       <div class="step-num" style="color:#FFD700;">04</div>
       <div>
@@ -97,15 +97,30 @@
         </div>
       </div>
     </div>
+    
     @endif
+    {{-- Bloc identifiants de connexion --}}
+    <div class="step-block" style="border-left-color:rgba(201,169,110,.6);margin-top:1.5rem;">
+      <div class="step-num">🔑</div>
+      <div>
+        <div class="step-title">Tes identifiants de connexion</div>
+        <div class="step-desc">
+          Email : <strong style="color:#F5E6C8;">{{ $user->email }}</strong><br>
+          Mot de passe temporaire : <strong style="color:#C9A96E;font-size:1.1rem;">{{ $tempPassword ?? '—' }}</strong><br><br>
+          <span style="color:rgba(245,230,200,.5);">
+            Connecte-toi et change ton mot de passe dès ta première connexion.
+          </span>
+        </div>
+      </div>
+    </div>
 
     <a href="https://renait-sens.com/carnet" class="cta-btn">
       📖 Accéder au Carnet de Traversée
     </a>
 
-    <a href="https://calendly.com/renait-sens" class="cta-btn" style="margin-top:.5rem;">
+    {{-- <a href="https://calendly.com/renait-sens" class="cta-btn" style="margin-top:.5rem;">
       📅 Réserver mon premier Dialogue
-    </a>
+    </a> --}}
 
     <p style="margin-top:2rem;">
       Si tu as la moindre question, réponds directement à cet email.
@@ -116,14 +131,14 @@
       — L'équipe Renaît-Sens
     </p>
   </div>
-
+{{-- 
   <div class="footer">
     <p>
       Renaît-Sens · Tassili n'Ajjer · Algérie<br>
       Le sahara ne t'a pas changé — il t'a révélé.<br><br>
       <a href="#" style="color:rgba(201,169,110,.4);font-size:.72rem;">Se désinscrire</a>
     </p>
-  </div>
+  </div> --}}
 </div>
 </body>
 </html>

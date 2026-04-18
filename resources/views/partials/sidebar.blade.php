@@ -31,7 +31,7 @@
 
         <div class="overflow-hidden transition-all duration-300"
             :class="collapsed ? 'opacity-0 w-0' : 'opacity-100 w-full'">
-            <a href="/" class="font-serif text-[#E8D5A0] text-[18px] tracking-wide whitespace-nowrap">Renaît-Sens</p>
+            <a href="/" class="font-serif text-[#E8D5A0] text-[18px] tracking-wide whitespace-nowrap"> Renaît-Sens </a>
             <p class="text-[16px] text-[#C9973A]/40 tracking-widest uppercase whitespace-nowrap mt-0.5">Traversée · 90 jours</p>
         </div>
 
@@ -77,6 +77,7 @@
                 </div>
                 <p class="text-[14px] text-[#C8C0B0]/40">Module {{ $mod }} · {{ $pct }}% accompli</p>
             </div>
+            
         </div>
     @endif
 
@@ -135,8 +136,8 @@
 
         @php
         $detenteItems = [
-            ['route' => 'detente.index',   'label' => 'Espace détente', 'sub' => 'Méditation · Sons',  'icon' => '<path d="M8 3C4 3 2 6 2 8c0 3 2.5 5 6 5s6-2 6-5c0-2-2-5-6-5z"/><path d="M6 8l1.5 1.5L10 6.5"/>'],
-            ['route' => 'detente.musique', 'label' => 'Musique',        'sub' => 'Bibliothèque audio', 'icon' => '<circle cx="5" cy="12" r="2"/><circle cx="12" cy="10" r="2"/><path d="M7 12V5l7-2v7"/>'],
+            ['route' => 'detente.index',   'label' => 'Espace meditation et detente', 'sub' => 'Méditation · Sons',  'icon' => '<path d="M8 3C4 3 2 6 2 8c0 3 2.5 5 6 5s6-2 6-5c0-2-2-5-6-5z"/><path d="M6 8l1.5 1.5L10 6.5"/>'],
+            ['route' => 'detente.musique', 'label' => 'Espace sons',        'sub' => 'Bibliothèque audio', 'icon' => '<circle cx="5" cy="12" r="2"/><circle cx="12" cy="10" r="2"/><path d="M7 12V5l7-2v7"/>'],
         ];
         @endphp
 
@@ -180,6 +181,27 @@
                 <span class="block text-[16px] text-[#C8C0B0]/70 group-hover:text-[#E8D5A0] whitespace-nowrap transition-colors">Paramètres</span>
             </span>
         </a>
+
+        <div id="lmp-sidebar-slot"
+            style="display:none"
+            class="relative flex items-center gap-3 px-2 py-2.5 rounded-lg
+                    hover:bg-[#C9973A]/7 transition-colors group cursor-pointer"
+            onclick="lmpUnpin(); lmpClick();">
+            <span class="w-10 h-10 shrink-0 rounded-lg bg-white/[0.03]
+                        flex items-center justify-center text-lg">
+                🪔
+            </span>
+            <span class="overflow-hidden transition-all duration-300 min-w-0"
+                :class="collapsed ? 'w-0 opacity-0' : 'w-full opacity-100'">
+                <span class="block text-[16px] text-[#C8C0B0]/70
+                            group-hover:text-[#E8D5A0] whitespace-nowrap transition-colors">
+                    Lampe magique
+                </span>
+                <span class="block text-[11px] text-[#C9973A]/40 whitespace-nowrap mt-0.5">
+                    ✦ Frotte la lampe
+                </span>
+            </span>
+        </div>
     </nav>
 
     {{-- Déconnexion --}}

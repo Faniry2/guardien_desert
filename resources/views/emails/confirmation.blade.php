@@ -49,7 +49,7 @@
 
   <div class="content">
     <h1>
-      Ta place est sécurisée, {{ $inscription->prenom }}.
+      Ta place est sécurisée, {{ $user->prenom }}.
       <em>Bienvenue dans la traversée.</em>
     </h1>
 
@@ -61,24 +61,24 @@
     <div class="recap-box">
       <div class="recap-row">
         <span class="recap-label">Nomade</span>
-        <span class="recap-val">{{ $inscription->nomComplet }}</span>
+        <span class="recap-val">{{ $user->prenom }} {{ $user->nom }}</span>
       </div>
       <div class="recap-row">
         <span class="recap-label">Traversée</span>
-        <span class="recap-val">{{ $inscription->libelleTraversee }}</span>
+        <span class="recap-val">{{ $user->traversee_label }}</span>
       </div>
       <div class="recap-row">
         <span class="recap-label">Montant réglé</span>
-        <span class="recap-val prix">{{ $inscription->montant }} €</span>
+        <span class="recap-val prix">{{ $user->traversee_prix }}</span>
       </div>
       <div class="recap-row">
         <span class="recap-label">Date</span>
-        <span class="recap-val">{{ $inscription->paid_at?->format('d/m/Y') }}</span>
+        <span class="recap-val">{{ $user->paid_at?->format('d/m/Y') }}</span>
       </div>
       <div class="recap-row">
         <span class="recap-label">Réf. paiement</span>
         <span class="recap-val" style="font-size:.8rem;color:rgba(245,230,200,.55);">
-          {{ $inscription->stripe_pi_id ?? $inscription->paypal_order_id ?? $inscription->id }}
+          {{ $user->stripe_id ?? $user->paypal_order_id ?? $user->id }}
         </span>
       </div>
     </div>

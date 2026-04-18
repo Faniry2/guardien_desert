@@ -25,8 +25,18 @@
     <li><a href="{{ route('renait_sens') }}">Renait-Sens</a></li>
     <li><a href="{{ route('traversees') }}">Traversées</a></li>
   </ul>
-  <a href="{{ route('login') }}" class="nav-cta">Accéder au Carnet</a>
+  <a href="{{ route('login') }}" id="nav-cta-d" class="nav-cta">Accéder au Carnet</a>
+  <button class="burger" id="burger" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
+
+<!-- MOBILE NAV -->
+<div class="mob-nav" id="mob-nav">
+  <a href="{{ route('home') }}" onclick="closeMenu()">Le Carnet</a>
+  <a href="{{ route('renait_sens') }}" onclick="closeMenu()">Renait-Sens</a>
+  <a href="{{ route('traversees') }}" onclick="closeMenu()">Traversées</a>
+</div>
 
 <!-- HERO -->
 <section id="hero">

@@ -606,6 +606,37 @@ nav ul li a:hover::after{width:100%}
 [data-mode="noon"] #nav.scrolled 
 .nav-cta{border-color:rgba(92,58,16,.4);color:#ffffff;}
 
+.mob-nav{position:fixed;top:0;left:0;width:100%;height:100vh;z-index:390;
+  display:flex;flex-direction:column;justify-content:center;align-items:center;gap:2.2rem;
+  background:rgba(5,5,15,.96);backdrop-filter:blur(24px);
+  opacity:0;pointer-events:none;transition:opacity .4s}
+[data-mode="dawn"] .mob-nav{background:rgba(20,8,4,.96)}
+[data-mode="noon"] .mob-nav{background:rgba(245,240,232,.97)}
+.mob-nav.open{opacity:1;pointer-events:all}
+.mob-nav a{font-family:'Cinzel',serif;font-size:1.4rem;letter-spacing:.22em;
+  text-transform:uppercase;text-decoration:none;color:var(--t-primary);
+  opacity:0;transform:translateY(16px);transition:opacity .4s,transform .4s,color .35s}
+.mob-nav.open a{opacity:1;transform:none}
+.mob-nav.open a:nth-child(1){transition-delay:.06s}
+.mob-nav.open a:nth-child(2){transition-delay:.13s}
+.mob-nav.open a:nth-child(3){transition-delay:.2s}
+.mob-nav.open a:nth-child(4){transition-delay:.27s}
+.mob-nav a:hover{color:var(--acc)}
+
+.burger{display:none;flex-direction:column;justify-content:center;gap:5px;
+  width:36px;height:36px;background:none;border:none;cursor:pointer;padding:4px}
+.burger span{display:block;height:1.5px;background:rgba(255,255,255,.85);border-radius:2px;transition:all .35s}
+.burger span:nth-child(1){width:22px}
+.burger span:nth-child(2){width:16px}
+.burger span:nth-child(3){width:22px}
+.burger.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg);width:22px}
+.burger.open span:nth-child(2){opacity:0;width:0}
+.burger.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg);width:22px}
+
+@media(max-width:820px){
+  nav ul, #nav-cta-d{display:none !important}
+  .burger{display:flex !important}
+}
 </style>
 </head>
 <body>
@@ -629,8 +660,18 @@ nav ul li a:hover::after{width:100%}
     <li><a href="{{ route('renait_sens') }}">Renait-Sens</a></li>
     <li><a href="{{ route('traversees') }}">Traversées</a></li>
   </ul>
-  <a href="{{ route('login') }}" class="nav-cta">Accéder au Carnet</a>
+  <a href="{{ route('login') }}" id="nav-cta-d" class="nav-cta">Accéder au Carnet</a>
+  <button class="burger" id="burger" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
+
+<!-- MOBILE NAV -->
+<div class="mob-nav" id="mob-nav">
+  <a href="{{ route('home') }}" onclick="closeMenu()">Le Carnet</a>
+  <a href="{{ route('renait_sens') }}" onclick="closeMenu()">Renait-Sens</a>
+  <a href="{{ route('traversees') }}" onclick="closeMenu()">Traversées</a>
+</div>
 
 <!-- LAYOUT -->
 <div class="bio-layout">
@@ -764,6 +805,14 @@ const io=new IntersectionObserver(entries=>entries.forEach(e=>{
   if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target)}
 }),{threshold:.1});
 document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+// Burger
+let mOpen=false;
+function toggleMenu(){mOpen=!mOpen;document.getElementById('burger').classList.toggle('open',mOpen);document.getElementById('mob-nav').classList.toggle('open',mOpen);document.body.style.overflow=mOpen?'hidden':''}
+function closeMenu(){mOpen=false;document.getElementById('burger').classList.remove('open');document.getElementById('mob-nav').classList.remove('open');document.body.style.overflow=''}
+
+
+
 </script>
 </body>
 </html>

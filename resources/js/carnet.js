@@ -28,3 +28,12 @@ const io=new IntersectionObserver(entries=>entries.forEach(e=>{
   if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target)}
 }),{threshold:.12});
 document.querySelectorAll('.reveal,.tl-step').forEach(el=>io.observe(el));
+
+// Burger
+let mOpen=false;
+function toggleMenu(){mOpen=!mOpen;document.getElementById('burger').classList.toggle('open',mOpen);document.getElementById('mob-nav').classList.toggle('open',mOpen);document.body.style.overflow=mOpen?'hidden':''}
+function closeMenu(){mOpen=false;document.getElementById('burger').classList.remove('open');document.getElementById('mob-nav').classList.remove('open');document.body.style.overflow=''}
+
+
+window.toggleMenu=toggleMenu;
+window.closeMenu=closeMenu;
