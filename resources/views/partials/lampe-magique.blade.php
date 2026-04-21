@@ -194,8 +194,10 @@
  
         {{-- Footer boutons --}}
         <div class="lmp-modal-footer">
-            <a href="{{ route('carnet.day', auth()->user()->carnet?->currentDayNumber() ?? 1) }}"
-               class="lmp-btn lmp-btn-or">&#128214;&nbsp; Ouvrir le carnet</a>
+            @if(auth()->user()->carnet)
+                <a href="{{ route('carnet.day', auth()->user()->carnet?->currentDayNumber() ?? 1) }}"
+                class="lmp-btn lmp-btn-or">&#128214;&nbsp; Ouvrir le carnet</a>
+            @endif
             <a href="{{ route('detente.musique') }}"
                class="lmp-btn lmp-btn-or">&#127925;&nbsp; Musique</a>
             <button class="lmp-btn lmp-btn-cl" onclick="lmpClose()">Fermer</button>
