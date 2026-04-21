@@ -194,8 +194,8 @@
  
         {{-- Footer boutons --}}
         <div class="lmp-modal-footer">
-            @if(auth()->user()->carnet)
-                <a href="{{ route('carnet.day', auth()->user()->carnet?->currentDayNumber() ?? 1) }}"
+            @if(auth()->check() && auth()->user()->carnet)
+                <a href="{{ route('carnet.day', auth()->user()->carnet->currentDayNumber() ?? 1) }}"
                 class="lmp-btn lmp-btn-or">&#128214;&nbsp; Ouvrir le carnet</a>
             @endif
             <a href="{{ route('detente.musique') }}"
