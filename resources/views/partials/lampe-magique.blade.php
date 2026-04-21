@@ -198,8 +198,10 @@
                 <a href="{{ route('carnet.day', auth()->user()->carnet->currentDayNumber() ?? 1) }}"
                 class="lmp-btn lmp-btn-or">&#128214;&nbsp; Ouvrir le carnet</a>
             @endif
+            @if(auth()->check() && auth()->user()->carnet)
             <a href="{{ route('detente.musique') }}"
                class="lmp-btn lmp-btn-or">&#127925;&nbsp; Musique</a>
+            @endif
             <button class="lmp-btn lmp-btn-cl" onclick="lmpClose()">Fermer</button>
         </div>
  
