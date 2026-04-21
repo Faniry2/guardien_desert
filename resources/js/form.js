@@ -158,36 +158,90 @@ function submitPay(e) {
   data.append('fraction',         fraction);
 
   fetch('/inscription/checkout', {
-    method:  'POST',
+    method: 'POST',
     headers: {
-      'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || ''
+        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '',
+        'Accept': 'application/json', // ← IMPORTANT : dit à Laravel de retourner du JSON
     },
     body: data
-  })
-  .then(r => r.text().then(text => {
-    console.log('Status:', r.status);
-    console.log('Response:', text);
-    try {
-      return JSON.parse(text);
-    } catch(e) {
-      // Ouvrir la page d'erreur dans un nouvel onglet
-      const win = window.open('', '_blank');
-      win.document.write(text);
-      throw new Error('Réponse non-JSON reçue');
+})
+.then(r => r.json())
+.then(data => {
+    // ── Erreurs de validation (422) ──
+    if (data.errors) {
+        // Afficher chaque erreur sous son champ
+        Object.keys(data.errors).forEach(field => {
+            const errMsg = data.errors[field][0];
+
+            // Chercher le champ correspondant
+            const input = document.querySelector(`[name="${field}"]`);
+            if (input) {
+                input.style.borderColor = 'red';
+
+                // Créer/mettre à jour le message d'erreur
+                let errEl = input.parentElement.querySelector('.err-msg');
+                if (!errEl) {
+                    errEl = document.createElement('span');
+                    errEl.className = 'err-msg';
+                    errEl.style.cssText = 'color:red;font-size:.8rem;display:block;margin-top:.3rem;';
+                    input.parentElement.appendChild(errEl);
+                }
+                errEl.textContent = errMsg;
+            }
+        });
+
+        btn.disabled = false;
+        document.getElementById('btn-pay-txt').textContent = 'Procéder au paiement sécurisé';
+        return;
     }
-  }))
-  .then(data => {
+
+    // ── Succès — redirection Stripe ──
     if (data.url) {
-      window.location.href = data.url;
-    } else {
-      alert('Erreur : ' + (data.message || 'Erreur inconnue'));
-      btn.disabled = false;
-      document.getElementById('btn-pay-txt').textContent = 'Procéder au paiement sécurisé';
+        window.location.href = data.url;
+        return;
     }
-  })
-  .catch(e => {
+
+    // ── Autre erreur ──
+    alert('Erreur : ' + (data.message || 'Erreur inconnue'));
+    btn.disabled = false;
+    document.getElementById('btn-pay-txt').textContent = 'Procéder au paiement sécurisé';
+})
+.catch(e => {
     console.error('Erreur:', e);
     btn.disabled = false;
     document.getElementById('btn-pay-txt').textContent = 'Procéder au paiement sécurisé';
-  });
+});
+  // fetch('/inscription/checkout', {
+  //   method:  'POST',
+  //   headers: {
+  //     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || ''
+  //   },
+  //   body: data
+  // })
+  // .then(r => r.text().then(text => {
+  //   console.log('Status:', r.status);
+  //   console.log('Response:', text);
+  //   try {
+  //     return JSON.parse(text);
+  //   } catch(e) {
+  //     // Ouvrir la page d'erreur dans un nouvel onglet
+  //     const win = window.open('', '_blank');
+  //     win.document.write(text);
+  //     throw new Error('Réponse non-JSON reçue');
+  //   }
+  // }))
+  // .then(data => {
+  //   if (data.url) {
+  //     window.location.href = data.url;
+  //   } else {
+  //     alert('Erreur : ' + (data.message || 'Erreur inconnue'));
+  //     btn.disabled = false;
+  //     document.getElementById('btn-pay-txt').textContent = 'Procéder au paiement sécurisé';
+  //   }
+  // })
+  // .catch(e => {
+  //   console.error('Erreur:', e);
+  //   btn.disabled = false;
+  //   document.getElementById('btn-pay-txt').textContent = 'Procéder au paiement sécurisé';
+  // });
 }

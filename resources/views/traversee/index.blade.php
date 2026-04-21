@@ -656,7 +656,7 @@ footer{
 
 <!-- NAV -->
 <nav id="nav">
-  <a href="#" class="nav-brand">Renait-Sens</a>
+  <a href="{{ route('home') }}" class="nav-brand">Renait-Sens</a>
   <ul>
      <li><a href="{{ route('home') }}">Le Carnet</a></li>
     <li><a href="{{ route('renait_sens') }}">Renait-Sens</a></li>
@@ -670,9 +670,9 @@ footer{
 
 <!-- MOBILE NAV -->
 <div class="mob-nav" id="mob-nav">
-  <a href="#" onclick="closeMenu()">L'Odyssée</a>
-  <a href="#traversees" onclick="closeMenu()">Les Traversées</a>
-  <a href="#" onclick="closeMenu()">La Bulle</a>
+  <a href="{{ route('home') }}" onclick="closeMenu()">Le Carnet</a>
+  <a href="{{ route('renait_sens') }}" onclick="closeMenu()">Renait-Sens</a>
+  <a href="{{ route('traversees') }}" onclick="closeMenu()">Traversées</a>
 </div>
 
 <!-- ══ HERO ══ -->

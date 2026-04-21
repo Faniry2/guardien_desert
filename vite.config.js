@@ -13,13 +13,15 @@ export default defineConfig({
                 'resources/css/widget_AI.css',
                 'resources/css/djanet.css',
                 'resources/css/form.css',
+                'resources/css/lmp.css',
                 'resources/js/app.js',
                 'resources/js/login.js',
                 'resources/js/carnet.js',
                 'resources/js/widget_AI.js',
                 'resources/js/crypto.js',
                 'resources/js/djanet.js',
-                'resources/js/form.js'
+                'resources/js/form.js',
+                'resources/js/lmp.js'
             ],
             refresh: true,
         }),

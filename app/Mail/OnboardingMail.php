@@ -15,7 +15,7 @@ class OnboardingMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public function __construct(public User $user) {}
+    public function __construct(public User $user, public string $tempPassword) {}
 
     public function envelope(): Envelope
     {
@@ -26,6 +26,9 @@ class OnboardingMail extends Mailable
 
     public function content(): Content
     {
-        return new Content(view: 'emails.onboarding');
+        return new Content(
+            view: 'emails.onboarding',
+            with: ['user' => $this->user, 'tempPassword' => $this->tempPassword], // ← passer $user et $tempPassword à la vue
+        );
     }
 }

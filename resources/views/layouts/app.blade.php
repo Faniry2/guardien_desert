@@ -21,7 +21,7 @@
        
 
         <!-- Scripts -->
-        @vite([ 'resources/js/app.js'])
+        @vite([ 'resources/css/lmp.css','resources/js/app.js'])
 
        
         {{-- CSS spécifique page --}}
@@ -36,6 +36,10 @@
         </main>
 
         
+        @include('partials.lampe-magique')
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+        @vite(['resources/js/crypto.js','resources/js/lmp.js'])
+        {{-- JS spécifique page --}}
         @stack('scripts')
     </body>
 </html>

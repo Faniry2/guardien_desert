@@ -23,9 +23,11 @@ class ConfirmationMail extends Mailable
             subject: '✦ Ta place dans Renaît-Sens est sécurisée — ' . $this->user->libelleTraversee,
         );
     }
-
-    public function content(): Content
+ public function content(): Content
     {
-        return new Content(view: 'emails.confirmation');
+        return new Content(
+            view: 'emails.confirmation',
+            with: ['user' => $this->user], // ← passer $user à la vue
+        );
     }
 }

@@ -8,6 +8,12 @@ use App\Http\Controllers\Espace\CarnetController;
 use App\Http\Controllers\Espace\DetenteController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\InscriptionController;
+
+use App\Http\Controllers\Api\EncryptionKeyController;
+use App\Http\Controllers\Api\CarnetEntryController;
+use App\Http\Controllers\Api\AudioController;
+use App\Http\Controllers\Espace\MusiqueController;
+
 // ── Pages publiques ────────────────────────────────────────────
 Route::get('/', fn() => view('carnet.index'))->name('home');
 Route::get('/renait-sens', fn() => view('renaitsens.index'))->name('renait_sens');
@@ -47,7 +53,8 @@ Route::middleware(['auth', 'verified'])
 
         // Détente
         Route::get('/detente',         [DetenteController::class, 'index'])->name('detente.index');
-        Route::get('/detente/musique', [DetenteController::class, 'musique'])->name('detente.musique');
+        // Route::get('/detente/musique', [DetenteController::class, 'musique'])->name('detente.musique');
+        Route::get('/detente/musique', [MusiqueController::class, 'index'])->name('detente.musique');
         Route::get('/detente/audio/{slug}', [DetenteController::class, 'stream'])
             ->where('slug', '[a-z0-9\-]+')
             ->name('detente.stream');
@@ -70,4 +77,12 @@ Route::prefix('inscription')->name('inscription.')->group(function () {
     Route::get('/invoice/{invoice}', [InscriptionController::class, 'downloadInvoice'])
         ->middleware('auth')
         ->name('invoice');
+});
+
+Route::middleware('auth')->prefix('api')->group(function () {
+    Route::get('/encryption-salt',       [EncryptionKeyController::class, 'getSalt']);
+    Route::post('/encryption-setup',     [EncryptionKeyController::class, 'setup']);
+    Route::get('/carnet/entries/{day}',  [CarnetEntryController::class, 'show'])->whereNumber('day');
+    Route::put('/carnet/entries/{day}',  [CarnetEntryController::class, 'update'])->whereNumber('day');
+    Route::get('/audio/{slug}',          [AudioController::class, 'stream'])->where('slug', '[a-z0-9\-]+');
 });
