@@ -8,19 +8,17 @@
     width: 100%;
     height: 100%;
     pointer-events: none;
-    z-index: 1;                /* Derrière la lampe (z-index 10) */
+    z-index: 1;
 }
 
 /* ──────────────────────────────────────────────────────────────
-   POSITION DE LA LAMPE
-   ← left: 290px = sidebar (260px) + marge (30px)
-      Si sidebar collapsée (68px) → mettre left: 90px
-      Si pas de sidebar → mettre left: 20px
+   POSITION DE LA LAMPE — bas droite
    ────────────────────────────────────────────────────────────── */
 #lmp-scene {
     position: fixed;
     bottom: 20px;
-    left: 290px;
+    right: 30px;
+    left: auto;
     z-index: 10;
     display: flex;
     flex-direction: column;
@@ -30,12 +28,10 @@
 
 /* ──────────────────────────────────────────────────────────────
    IMAGE DE LA LAMPE
-   ← width: 140px  → taille de la lampe
    ────────────────────────────────────────────────────────────── */
 #lmp-img {
     width: 140px;
     display: block;
-    /* pointer-events: all; */
     cursor: pointer;
     filter: drop-shadow(0 4px 24px rgba(201,151,58,.6));
     transition: filter .3s, transform .3s;
@@ -55,7 +51,6 @@
 
 /* ──────────────────────────────────────────────────────────────
    HINT "Frotte la lampe"
-   ← Pour masquer le hint → display: none
    ────────────────────────────────────────────────────────────── */
 #lmp-hint {
     margin-top: 6px;
@@ -81,10 +76,15 @@
 }
 .lmp-modal-bg.open { opacity: 1; pointer-events: all; }
 .lmp-modal-box {
-    position: relative; max-width: 520px; width: 90%;
+    position: relative;
+    max-width: 680px;
+    width: 90%;
     background: linear-gradient(145deg,#0D0A05,#1C1408,#0D0A05);
-    border: 1px solid rgba(201,151,58,.3); border-radius: 24px;
-    padding: 2.8rem 2.5rem; text-align: center;
+    border: 1px solid rgba(201,151,58,.3);
+    border-radius: 24px;
+    padding: 0;
+    overflow: hidden;
+    text-align: center;
     transform: translateY(36px) scale(.93);
     transition: transform .55s cubic-bezier(.34,1.56,.64,1), opacity .45s;
     opacity: 0;
@@ -93,45 +93,25 @@
 .lmp-modal-box::before, .lmp-modal-box::after {
     content: ''; position: absolute; width: 32px; height: 32px;
     border-color: rgba(201,151,58,.5); border-style: solid;
+    pointer-events: none; z-index: 2;
 }
 .lmp-modal-box::before { top:-1px; left:-1px; border-width:2px 0 0 2px; border-radius:20px 0 0 0; }
 .lmp-modal-box::after  { bottom:-1px; right:-1px; border-width:0 2px 2px 0; border-radius:0 0 20px 0; }
+
 .lmp-modal-title { font-size:1.6rem; font-weight:400; color:#E8D5A0; margin-bottom:.4rem; }
 .lmp-modal-sub { font-size:.82rem; font-style:italic; color:rgba(201,151,58,.7); margin-bottom:1.8rem; letter-spacing:.06em; }
 .lmp-modal-sep { display:flex; align-items:center; gap:1rem; margin:0 auto 1.8rem; max-width:260px; }
 .lmp-modal-sep::before,.lmp-modal-sep::after { content:''; flex:1; height:1px; background:linear-gradient(90deg,transparent,rgba(201,151,58,.4),transparent); }
 .lmp-modal-gem { width:6px; height:6px; background:#C9973A; transform:rotate(45deg); }
-.lmp-modal-quote { font-size:1.05rem; font-style:italic; color:rgba(245,230,200,.75); line-height:2; margin-bottom:2rem; }
-.lmp-modal-btns { display:flex; gap:.8rem; justify-content:center; flex-wrap:wrap; }
-.lmp-btn { padding:.72rem 1.8rem; font-family:Georgia,serif; font-size:.78rem; letter-spacing:.2em;
-    text-transform:uppercase; border-radius:50px; transition:all .3s; cursor:pointer;
-    text-decoration:none; display:inline-block; border:none; }
-.lmp-btn-or { color:#C9973A; border:1px solid rgba(201,151,58,.4); background:rgba(201,151,58,.08); }
-.lmp-btn-or:hover { background:rgba(201,151,58,.22); color:#E8D5A0; }
-.lmp-btn-cl { color:rgba(201,151,58,.45); border:1px solid rgba(201,151,58,.15); background:transparent; }
-/* Particules flottantes dans le modal */
-.lmp-modal-sparks { position:absolute; inset:0; pointer-events:none; border-radius:24px; overflow:hidden; }
-.lmp-msp { position:absolute; border-radius:50%; animation:lmp-msp-float linear infinite; }
-@keyframes lmp-msp-float {
-    0%   { opacity:.85; transform:translateY(0) translateX(0) scale(1); }
-    100% { opacity:0;   transform:translateY(-80px) translateX(var(--dx)) scale(0); }
-}
 
-
-/* ── Modal élargi pour la FAQ ── */
-.lmp-modal-box {
-    max-width: 680px !important;
-    padding: 0 !important;
-    overflow: hidden;
-}
- 
 /* Header modal */
 .lmp-modal-header {
     padding: 2.2rem 2.5rem 1.5rem;
     text-align: center;
     border-bottom: 1px solid rgba(201,151,58,.12);
+    position: relative;
 }
- 
+
 /* Zone scrollable FAQ */
 .lmp-modal-body {
     max-height: 60vh;
@@ -143,7 +123,7 @@
 .lmp-modal-body::-webkit-scrollbar { width: 4px; }
 .lmp-modal-body::-webkit-scrollbar-track { background: transparent; }
 .lmp-modal-body::-webkit-scrollbar-thumb { background: rgba(201,151,58,.3); border-radius: 2px; }
- 
+
 /* Section titre FAQ */
 .lmp-faq-section-title {
     font-family: 'Cinzel', Georgia, serif;
@@ -154,7 +134,7 @@
     margin-bottom: 1.4rem;
     text-align: center;
 }
- 
+
 /* Chaque question FAQ */
 .lmp-faq-item {
     margin-bottom: 1.4rem;
@@ -163,10 +143,10 @@
     transition: border-color .3s;
 }
 .lmp-faq-item:hover { border-color: rgba(201,151,58,.5); }
- 
+
 .lmp-faq-q {
     font-family: Georgia, serif;
-    font-size: 1.4rem;;
+    font-size: 1.4rem;
     font-weight: 500;
     color: #E8D5A0;
     margin-bottom: .5rem;
@@ -182,38 +162,27 @@
     margin-top: .15rem;
     flex-shrink: 0;
 }
- 
+
 .lmp-faq-a {
     font-family: Georgia, serif;
     font-size: .99rem;
     font-style: italic;
-    color: rgba(248, 241, 228, 0.6);
+    color: rgba(248,241,228,.6);
     line-height: 1.85;
-    display: none; /* accordion — JS toggle */
+    display: none;
 }
 .lmp-faq-a.open { display: block; }
- 
-/* Liste de questions dans les réponses */
-.lmp-faq-a ul {
-    list-style: none;
-    margin-top: .6rem;
-    padding: 0;
-}
-.lmp-faq-a ul li {
-    color: rgba(201,151,58,.75);
-    padding: .2rem 0;
-    font-style: normal;
-}
+
+.lmp-faq-a ul { list-style: none; margin-top: .6rem; padding: 0; }
+.lmp-faq-a ul li { color: rgba(201,151,58,.75); padding: .2rem 0; font-style: normal; }
 .lmp-faq-a ul li::before { content: '— '; }
- 
-/* Séparateur */
+
 .lmp-faq-sep {
     height: 1px;
     background: linear-gradient(90deg, transparent, rgba(201,151,58,.2), transparent);
     margin: 1.4rem 0;
 }
- 
-/* Souffle final */
+
 .lmp-faq-outro {
     font-family: Georgia, serif;
     font-size: .9rem;
@@ -223,7 +192,7 @@
     text-align: center;
     padding: 1rem 0 .5rem;
 }
- 
+
 /* Footer modal */
 .lmp-modal-footer {
     padding: 1.2rem 2.5rem 1.8rem;
@@ -234,7 +203,33 @@
     flex-wrap: wrap;
 }
 
-/* Bouton épingler — visible au hover de la lampe */
+/* Boutons */
+.lmp-btn {
+    padding: .72rem 1.8rem;
+    font-family: Georgia, serif;
+    font-size: .78rem;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    border-radius: 50px;
+    transition: all .3s;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    border: none;
+}
+.lmp-btn-or { color:#C9973A; border:1px solid rgba(201,151,58,.4); background:rgba(201,151,58,.08); }
+.lmp-btn-or:hover { background:rgba(201,151,58,.22); color:#E8D5A0; }
+.lmp-btn-cl { color:rgba(201,151,58,.45); border:1px solid rgba(201,151,58,.15); background:transparent; }
+
+/* Particules flottantes dans le modal */
+.lmp-modal-sparks { position:absolute; inset:0; pointer-events:none; border-radius:24px; overflow:hidden; }
+.lmp-msp { position:absolute; border-radius:50%; animation:lmp-msp-float linear infinite; }
+@keyframes lmp-msp-float {
+    0%   { opacity:.85; transform:translateY(0) translateX(0) scale(1); }
+    100% { opacity:0;   transform:translateY(-80px) translateX(var(--dx)) scale(0); }
+}
+
+/* Bouton épingler */
 #lmp-pin-btn {
     position: absolute;
     top: -14px;
@@ -266,109 +261,31 @@
     color: #E8D5A0;
 }
 #lmp-pin-btn svg {
-    width: 12px;
-    height: 12px;
-    stroke: currentColor;
-    transition: transform .3s;
+    width: 13px; height: 13px;
+    stroke: currentColor; fill: none;
+    transition: fill .3s, transform .3s;
 }
 #lmp-pin-btn.pinned {
-    opacity: 1;              /* toujours visible quand épinglé */
+    opacity: 1;
     border-color: #C9973A;
     color: #C9973A;
 }
-#lmp-pin-btn.pinned svg { transform: rotate(45deg); }
-#lmp-pin-btn.pinned span::before { content: 'Dés'; }
+#lmp-pin-btn.pinned svg { fill: #C9973A; stroke: #C9973A; transform: rotate(45deg); }
 #lmp-pin-btn.pinned span { display: none; }
-#lmp-pin-btn.pinned::after { content: 'Désépingler'; font-family: Georgia,serif; font-size:10px; font-style:italic; }
-#lmp-pin-btn svg {
-    width: 13px;
-    height: 13px;
-    stroke: currentColor;
-    fill: none;
-    transition: fill .3s, transform .3s;
-}
-/* Quand épinglé → icône remplie pour montrer l'état actif */
-#lmp-pin-btn.pinned svg {
-    fill: #C9973A;
-    stroke: #C9973A;
+#lmp-pin-btn.pinned::after {
+    content: 'Désépingler';
+    font-family: Georgia,serif;
+    font-size: 10px;
+    font-style: italic;
 }
 
-
-/* ── RESPONSIVE ─────────────────────────────────────────────── */
-
-/* Tablette (sidebar collapsée = 68px) */
-@media (max-width: 1024px) {
-    #lmp-scene {
-        left: 88px; /* 68px sidebar collapsée + 20px */
-    }
-}
-
-/* Mobile — pas de sidebar */
-@media (max-width: 768px) {
-    #lmp-scene {
-        left: 16px;  /* colle au bord gauche */
-        bottom: 16px;
-    }
-    #lmp-img {
-        width: 100px; /* lampe plus petite sur mobile */
-    }
-    #lmp-hint {
-        font-size: 0.7rem;
-    }
-    /* Cacher le bouton pin sur mobile — pas de sidebar */
-    #lmp-pin-btn {
-        display: none !important;
-    }
-    /* Modal plein écran sur mobile */
-    .lmp-modal-box {
-        width: 95% !important;
-        max-height: 90vh;
-    }
-    .lmp-modal-body {
-        max-height: 55vh;
-    }
-    .lmp-modal-header {
-        padding: 1.5rem 1.5rem 1rem;
-    }
-    .lmp-modal-body {
-        padding: 1.2rem 1.5rem;
-    }
-    .lmp-modal-footer {
-        padding: 1rem 1.5rem 1.4rem;
-        flex-direction: column;
-        align-items: center;
-    }
-    .lmp-btn {
-        width: 100%;
-        text-align: center;
-    }
-    .lmp-faq-q {
-        font-size: 1rem;
-    }
-}
-
-/* Très petit mobile */
-@media (max-width: 480px) {
-    #lmp-scene {
-        left: 12px;
-        bottom: 12px;
-    }
-    #lmp-img {
-        width: 80px;
-    }
-    #lmp-hint {
-        display: none; /* trop petit = on cache le hint */
-    }
-}
-
-
+/* Bouton fermer mobile */
 #lmp-close-btn {
-    display: none; /* caché sur desktop */
+    display: none;
     position: absolute;
     top: 14px;
     right: 14px;
-    width: 32px;
-    height: 32px;
+    width: 32px; height: 32px;
     border-radius: 50%;
     background: rgba(201,151,58,.08);
     border: 1px solid rgba(201,151,58,.25);
@@ -379,20 +296,37 @@
     transition: all .3s;
     z-index: 10;
 }
-#lmp-close-btn svg {
-    width: 14px;
-    height: 14px;
-    stroke: currentColor;
-}
-#lmp-close-btn:hover {
-    background: rgba(201,151,58,.2);
-    border-color: #C9973A;
-    color: #E8D5A0;
+#lmp-close-btn svg { width: 14px; height: 14px; stroke: currentColor; }
+#lmp-close-btn:hover { background: rgba(201,151,58,.2); border-color: #C9973A; color: #E8D5A0; }
+
+/* ── RESPONSIVE ─────────────────────────────────────────────── */
+@media (max-width: 1024px) {
+    #lmp-scene {
+        right: 20px;
+        left: auto;
+    }
 }
 
-/* Visible uniquement sur mobile */
 @media (max-width: 768px) {
-    #lmp-close-btn {
-        display: flex;
+    #lmp-scene {
+        right: 16px;
+        left: auto;
+        bottom: 16px;
     }
+    #lmp-img { width: 100px; }
+    #lmp-hint { font-size: 0.7rem; }
+    #lmp-pin-btn { display: none !important; }
+    .lmp-modal-box { width: 95% !important; max-height: 90vh; }
+    .lmp-modal-body { max-height: 55vh; padding: 1.2rem 1.5rem; }
+    .lmp-modal-header { padding: 1.5rem 1.5rem 1rem; }
+    .lmp-modal-footer { padding: 1rem 1.5rem 1.4rem; flex-direction: column; align-items: center; }
+    .lmp-btn { width: 100%; text-align: center; }
+    .lmp-faq-q { font-size: 1rem; }
+    #lmp-close-btn { display: flex; }
+}
+
+@media (max-width: 480px) {
+    #lmp-scene { right: 12px; left: auto; bottom: 12px; }
+    #lmp-img { width: 80px; }
+    #lmp-hint { display: none; }
 }
