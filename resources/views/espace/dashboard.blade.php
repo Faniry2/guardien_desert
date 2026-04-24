@@ -4,8 +4,14 @@
 @section('breadcrumb', 'Tableau de bord')
 
 @section('content')
+@include('partials.welcome-video', [
+    'videoUrl'   => asset('videos/welcom.mp4'),
+    'posterUrl'  => asset('images/carnet-poster.png'),
+    'storageKey' => 'rs_welcome_seen_' . auth()->id(),
+])
 <div class="px-4 sm:px-6 py-6 sm:py-8 max-w-4xl">
 
+   
     <h1 class="font-serif text-[#E8D5A0] text-2xl sm:text-3xl font-light tracking-wide mb-1">
         Bonjour, {{ auth()->user()->prenom ?? auth()->user()->name }}.
     </h1>

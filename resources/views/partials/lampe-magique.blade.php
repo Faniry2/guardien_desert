@@ -21,7 +21,7 @@
         style="background:none;border:none;padding:0;cursor:pointer;display:block;pointer-events:all;">
         <img id="lmp-img"
         onclick="lmpClick()"
-         src="{{ asset('images/lamp.png') }}"
+         src="{{ asset('images/lamp_gauche.png') }}"
          alt="Lampe magique">
     </button>
     {{-- <img id="lmp-img"

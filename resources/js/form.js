@@ -157,7 +157,7 @@ function submitPay(e) {
   data.append('methode_paiement', methode);
   data.append('fraction',         fraction);
 
-  fetch('/inscription/checkout', {
+fetch('/inscription/checkout', {
     method: 'POST',
     headers: {
         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '',

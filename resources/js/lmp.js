@@ -1,11 +1,10 @@
 // ================================================================
 // FLUID SIMULATION WebGL
 // Code original Pavel Dobryakov — adapté pour la lampe magique
-// La fumée est injectée via splat() depuis le bec de la lampe
+// Lampe positionnée en BAS À DROITE
+// Fumée et étincelles orientées vers la GAUCHE
 // ================================================================
-var shouldEmitOnePuff = true; 
-var LMP_LEFT_EXPANDED  = 290; // sidebar ouverte  (260px + 30px)
-var LMP_LEFT_COLLAPSED = 82;  // sidebar collapsée (68px + 14px)
+var shouldEmitOnePuff = true;
 
 // ── Lecture état pin au chargement ────────────────────────────
 var lmpPinned = localStorage.getItem('lmp_pinned') === 'true';
@@ -14,16 +13,16 @@ canvas.width  = canvas.clientWidth;
 canvas.height = canvas.clientHeight;
 
 // ----------------------------------------------------------------
-// CONFIG — modifie ces valeurs pour changer le comportement
+// CONFIG
 // ----------------------------------------------------------------
 var config = {
-    TEXTURE_DOWNSAMPLE:   1,    // 1=haute qualité, 2=moitié (plus rapide)
-    DENSITY_DISSIPATION:  0.985,// Vitesse disparition fumée : 0.9=vite, 0.99=lent
-    VELOCITY_DISSIPATION: 0.99, // Freinage du fluide : bas=s'arrête vite
-    PRESSURE_DISSIPATION: 0.8,  // Stabilité de pression
-    PRESSURE_ITERATIONS:  25,   // Précision (plus = meilleur + lent)
-    CURL:                 30,   // Intensité des tourbillons : 0=plat, 50=très bouclé
-    SPLAT_RADIUS:         0.008 // Taille d'un puff : 0.005=fin, 0.02=épais
+    TEXTURE_DOWNSAMPLE:   1,
+    DENSITY_DISSIPATION:  0.985,
+    VELOCITY_DISSIPATION: 0.99,
+    PRESSURE_DISSIPATION: 0.8,
+    PRESSURE_ITERATIONS:  25,
+    CURL:                 30,
+    SPLAT_RADIUS:         0.008
 };
 
 var pointers   = [];
@@ -67,7 +66,7 @@ function pointerPrototype() {
 pointers.push(new pointerPrototype());
 
 // ----------------------------------------------------------------
-// GLPROGRAM — compile et lie les shaders WebGL
+// GLPROGRAM
 // ----------------------------------------------------------------
 var GLProgram = function() {
     function GLProgram(vs, fs) {
@@ -97,7 +96,7 @@ function compileShader(type, source) {
 }
 
 // ----------------------------------------------------------------
-// SHADERS — code GLSL original, ne pas modifier
+// SHADERS
 // ----------------------------------------------------------------
 var baseVertexShader               = compileShader(gl.VERTEX_SHADER,   'precision highp float;precision mediump sampler2D;attribute vec2 aPosition;varying vec2 vUv;varying vec2 vL;varying vec2 vR;varying vec2 vT;varying vec2 vB;uniform vec2 texelSize;void main(){vUv=aPosition*.5+.5;vL=vUv-vec2(texelSize.x,0.);vR=vUv+vec2(texelSize.x,0.);vT=vUv+vec2(0.,texelSize.y);vB=vUv-vec2(0.,texelSize.y);gl_Position=vec4(aPosition,0.,1.);}');
 var clearShader                    = compileShader(gl.FRAGMENT_SHADER,  'precision highp float;precision mediump sampler2D;varying vec2 vUv;uniform sampler2D uTexture;uniform float value;void main(){gl_FragColor=value*texture2D(uTexture,vUv);}');
@@ -165,7 +164,6 @@ function createDoubleFBO(texId, w, h, internalFormat, format, type, param) {
     };
 }
 
-// Rendu plein écran (quad de 2 triangles)
 var blit = (function() {
     gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1,-1,1,1,1,1,-1]), gl.STATIC_DRAW);
@@ -184,7 +182,7 @@ var blit = (function() {
 // ----------------------------------------------------------------
 var lastTime = Date.now();
 update();
-// emitOnePuff();
+
 function update() {
     resizeCanvas();
     var dt = Math.min((Date.now() - lastTime) / 1000, 0.016);
@@ -199,9 +197,8 @@ function update() {
         }
     }
 
-    // Injection fumée idle à chaque frame
-    //emitIdleTick();
     emitIdleTick30FPS();
+
     advectionProgram.bind();
     gl.uniform2f(advectionProgram.uniforms.texelSize, 1/textureWidth, 1/textureHeight);
     gl.uniform1i(advectionProgram.uniforms.uVelocity, velocity.first[2]);
@@ -267,13 +264,7 @@ function update() {
 }
 
 // ----------------------------------------------------------------
-// SPLAT — injecte vélocité + couleur dans le fluide
-// x, y   : position en pixels écran
-// dx, dy : force/direction du mouvement (grand = plus fort)
-// color  : [r, g, b] — le shader multiplie par 0.3
-//          donc donner des valeurs ~3x ce que tu veux voir
-//          ex: [1, 0.6, 0.1] → flamme orange visible
-// ← CHANGER LES COULEURS : modifier r, g, b dans emitIdleTick()
+// SPLAT
 // ----------------------------------------------------------------
 function splat(x, y, dx, dy, color) {
     splatProgram.bind();
@@ -297,160 +288,47 @@ function resizeCanvas() {
 }
 
 // ================================================================
-// ÉMISSION FUMÉE IDLE
-// Appelée à chaque frame. Alterne entre pause et émission.
-//
-// ← DÉSACTIVER l'animation automatique :
-//      Commenter la ligne "emitIdleTick();" dans update()
-//
-// ← RENDRE PLUS FRÉQUENTE :
-//      Diminuer idlePauseMax (ex: 60 au lieu de 180)
-//      ou diminuer IDLE_EVERY_N (ex: 2 au lieu de 4)
-//
-// ← RENDRE MOINS FRÉQUENTE :
-//      Augmenter idlePauseMax (ex: 300)
-//
-// ← CHANGER LA COULEUR :
-//      Modifier r, g, b dans le bloc "Émission"
-//      r=rouge, g=vert, b=bleu (valeurs 0.0 à ~2.0)
-//      Fumée bleu-gris  : r=0.15, g=0.18, b=0.30
-//      Fumée dorée      : r=1.0,  g=0.6,  b=0.1
-//      Fumée blanche    : r=0.8,  g=0.8,  b=0.8
-//
-// ← CHANGER LA HAUTEUR :
-//      Modifier dy : plus négatif = monte plus haut
-//      ex: dy = -(Math.random()*90+60)  → hauteur normale
-//          dy = -(Math.random()*40+20)  → reste basse
-//          dy = -(Math.random()*200+100)→ monte très haut
-//
-// ← CHANGER LA LARGEUR / DISPERSION :
-//      Modifier dx : plus grand = plus large
-//      ex: dx = (Math.random()-.45)*60  → normal
-//          dx = (Math.random()-.45)*20  → très fin
-//          dx = (Math.random()-.45)*150 → très large
+// ÉMISSION FUMÉE — puff initial au chargement
+// Lampe à droite → fumée part vers la GAUCHE (dx négatif)
 // ================================================================
-var idleFrame      = 0;
-var idlePhase      = 0;     // 0 = pause, 1 = émission
-var idleEmitFrames = 0;
-var idlePauseMax   = 180;   // ← durée pause en frames (~3s à 60fps)
-var IDLE_EMIT_MAX  = 80;    // ← durée d'une volute en frames (~1.3s)
-var IDLE_EVERY_N   = 4;     // ← émettre 1 puff toutes les N frames
+var idleFrame = 0;
 
-// Calcule la position du bec de la lampe en pixels écran
-// ← Si la lampe est repositionnée, ajuster les ratios :
-//    0.78 = bec à 78% de la largeur de l'image (côté droit)
-//    0.36 = bec à 36% de la hauteur (tiers supérieur)
 function getLampBec() {
     var rect = document.getElementById('lmp-img').getBoundingClientRect();
     return {
-        x: rect.left + rect.width  * 0.78,
+        x: rect.left + rect.width  * 0.22,   // ← bec à gauche de l'image (côté gauche)
         y: rect.top  + rect.height * 0.36
     };
 }
 
-function emitOnePuff() {
-    var bec = getLampBec();
-
-    // ← Nombre de splats dans le puff (1=très fin, 8=épais)
-    var NB_SPLATS = 5;
-
-    for (var i = 0; i < NB_SPLATS; i++) {
-        var dx = (Math.random() - .45) * 60;   // ← largeur
-        var dy = -(Math.random() * 90 + 60);   // ← hauteur
-        var r  = .15 + Math.random() * .1;     // ← couleur
-        var g  = .18 + Math.random() * .1;
-        var b  = .30 + Math.random() * .15;
-        splat(bec.x, bec.y, dx, dy, [r, g, b]);
-    }
-}
 function emitIdleTick30FPS() {
-    // ── Puff unique au chargement ──
     if (shouldEmitOnePuff) {
         idleFrame++;
-        if (idleFrame > 30) { // ← attend 30 frames (~0.5s) que tout soit prêt
+        if (idleFrame > 30) {
             shouldEmitOnePuff = false;
             idleFrame = 0;
             var bec = getLampBec();
-            for (var i = 0; i < 8; i++) { // ← 8 splats = un puff
-                // splat 0 = très fin (0.003), splat 4 = large (0.015)
+            for (var i = 0; i < 8; i++) {
                 config.SPLAT_RADIUS = 0.003 + (i * 0.003);
-                splat(bec.x, bec.y,
-                    (Math.random() - .45) * 60,
-                    -(Math.random() * 90 + 60),
+                splat(
+                    bec.x, bec.y,
+                    -(Math.random() * 60 + 20),           // ← vers la gauche (négatif)
+                    -(Math.random() * 90 + 60),           // ← vers le haut
                     [.15 + Math.random()*.1, .18 + Math.random()*.1, .30 + Math.random()*.15]
                 );
             }
         }
-        return; // ← sort ici, pas d'idle après
-    }
-
-    // ── Idle normal en dessous si tu veux le réactiver un jour ──
-    // (actuellement désactivé)
-}
-function emitIdleTick() {
-    idleFrame++;
-
-    if (idlePhase === 0) {
-        // ── Phase PAUSE ──
-        if (idleFrame > idlePauseMax) {
-            idleFrame      = 0;
-            idlePhase      = 1;
-            idleEmitFrames = 0;
-            // Durée de pause aléatoire pour la prochaine fois
-            idlePauseMax = 120 + Math.floor(Math.random() * 180);
-        }
-    } else {
-        // ── Phase ÉMISSION ──
-        idleEmitFrames++;
-        if (idleFrame % IDLE_EVERY_N === 0) {
-            var bec = getLampBec();
-
-            // ← LARGEUR de la fumée (dispersion horizontale)
-            var dx = (Math.random() - .45) * 60;
-
-            // ← HAUTEUR de montée (négatif = vers le haut)
-            var dy = -(Math.random() * 90 + 60);
-
-            // ← COULEUR fumée [rouge, vert, bleu]
-            // Ces valeurs sont multipliées par 0.3 dans le shader
-            // Bleu-gris : r=0.15, g=0.18, b=0.30
-            var r = .15 + Math.random() * .1;
-            var g = .18 + Math.random() * .1;
-            var b = .30 + Math.random() * .15;
-
-            splat(bec.x, bec.y, dx, dy, [r, g, b]);
-        }
-        if (idleEmitFrames > IDLE_EMIT_MAX) {
-            idlePhase = 0;
-            idleFrame = 0;
-        }
+        return;
     }
 }
 
 // ================================================================
 // CLIC SUR LA LAMPE
-//
-// Séquence au clic :
-//   1. Animation shake de la lampe
-//   2. Flash doré centré sur le bec (GSAP)
-//   3. Explosion fumée WebGL (15 splats rapides)
-//   4. 40 étincelles GSAP en arc parabolique
-//   5. Modal après 1.1s
-//   6. Reprise de l'idle après 8s
-//
-// ← CHANGER LE NOMBRE D'ÉTINCELLES : modifier "40" dans la boucle
-// ← CHANGER LA COULEUR ÉTINCELLES  : modifier '#FF9A14' et '#C9973A'
-// ← CHANGER LA DISTANCE            : modifier "80 + Math.random()*220"
-// ← CHANGER LA TAILLE ÉTINCELLES   : modifier "3 + Math.random()*5"
-// ← CHANGER COULEUR EXPLOSION FUMÉE: modifier r, g, b dans la boucle
+// Fumée et étincelles orientées vers la GAUCHE
 // ================================================================
 var clickedOnce = false;
 
 window.lmpClick = function() {
-    // if (clickedOnce) return;
-    // clickedOnce = true;
-
-    // 1. Shake lampe
     var lamp = document.getElementById('lmp-img');
     lamp.classList.add('shaking');
     setTimeout(function() { lamp.classList.remove('shaking'); }, 450);
@@ -458,7 +336,7 @@ window.lmpClick = function() {
 
     var bec = getLampBec();
 
-    // 2. Flash doré (GSAP fade out)
+    // Flash doré
     var flash = document.createElement('div');
     flash.style.cssText =
         'position:fixed;inset:0;pointer-events:none;z-index:997;' +
@@ -470,51 +348,41 @@ window.lmpClick = function() {
         onComplete: function() { flash.remove(); }
     });
 
-    // 3. Explosion fumée WebGL — 15 splats rapides depuis le bec
-    // ← Changer "15" pour plus/moins de fumée à l'explosion
+    // Explosion fumée — vers la gauche
     for (var i = 0; i < 15; i++) {
         (function(idx) {
             setTimeout(function() {
-                var dx = (Math.random() - .5)  * 500; // ← largeur explosion
-                var dy = -(Math.random() * 350 + 150); // ← hauteur explosion
-
-                // ← COULEUR de la fumée d'explosion [r, g, b]
+                var dx = -(Math.random() * 500 + 50);    // ← vers la gauche (négatif)
+                var dy = -(Math.random() * 350 + 150);   // ← vers le haut
                 var r = .25 + Math.random() * .35;
                 var g = .28 + Math.random() * .28;
-                var b = .45 + Math.random() * .4;  // bleu-blanc
-
+                var b = .45 + Math.random() * .4;
                 splat(bec.x, bec.y, dx, dy, [r, g, b]);
-            }, idx * 55); // ← délai entre chaque splat (ms)
+            }, idx * 55);
         })(i);
     }
 
-    // 4. Étincelles GSAP
-    // ← Changer "40" pour le nombre d'étincelles
+    // Étincelles GSAP — arc vers la gauche
     for (var j = 0; j < 40; j++) {
         (function() {
             var el   = document.createElement('div');
-            // ← TAILLE étincelle : min 3px, max 8px
             var size = 3 + Math.random() * 5;
             el.style.cssText =
                 'position:fixed;width:' + size + 'px;height:' + size + 'px;' +
                 'border-radius:50%;pointer-events:none;z-index:998;' +
                 'left:' + bec.x + 'px;top:' + bec.y + 'px;' +
-                // ← COULEURS étincelles : or (#FF9A14) ou ambre (#C9973A)
                 'background:' + (Math.random() > .45 ? '#FF9A14' : '#C9973A') + ';';
             document.body.appendChild(el);
 
-            // Arc de dispersion : ±80° autour de la verticale
-            var angle = -Math.PI / 2 + (Math.random() - .5) * Math.PI * .9;
-            // ← DISTANCE de vol : 80 à 300px
+            // Arc centré vers la gauche : de -20° à -160° (partie gauche du cercle)
+            var angle = -Math.PI / 2 - (Math.random() * Math.PI * .5) + (Math.random() - .5) * Math.PI * .4;
             var dist  = 80 + Math.random() * 220;
             var tx    = Math.cos(angle) * dist;
-            // Gravité simulée (arc parabolique)
             var ty    = Math.sin(angle) * dist + dist * .6;
 
             gsap.to(el, {
                 x: tx, y: ty,
                 opacity: 0, scale: 0.1,
-                // ← DURÉE animation étincelles
                 duration: .6 + Math.random() * .8,
                 ease: 'power2.out',
                 delay: Math.random() * .15,
@@ -523,16 +391,15 @@ window.lmpClick = function() {
         })();
     }
 
-    // 5. Modal après 1.1s
+    // Modal après 1.1s
     setTimeout(function() {
         document.getElementById('lmp-modal-bg').classList.add('open');
         lmpSpawnModalSparks();
     }, 1100);
 
-    // 6. Reprise idle après 8s
+    // Reset après 8s
     setTimeout(function() {
         clickedOnce  = false;
-        idlePhase    = 0;
         idleFrame    = 0;
     }, 8000);
 };
@@ -547,7 +414,6 @@ window.lmpCloseBg = function(e) {
     if (e.target === document.getElementById('lmp-modal-bg')) lmpClose();
 };
 
-// Particules flottantes dans le modal
 function lmpSpawnModalSparks() {
     var c = document.getElementById('lmp-modal-sparks');
     c.innerHTML = '';
@@ -569,91 +435,16 @@ function lmpSpawnModalSparks() {
     }
 }
 
- // Expose pour l'appel depuis Alpine
 window.lmpFaqToggle = function(questionEl) {
     var answer = questionEl.nextElementSibling;
     answer.classList.toggle('open');
 };
 
-
-// function lmpUpdatePosition() {
-//     var scene = document.getElementById('lmp-scene');
-//     if (!scene) return;
-//     // Lire la largeur réelle de l'aside plutôt que localStorage
-//     var aside = document.querySelector('aside');
-//     var collapsed = aside ? aside.offsetWidth < 150 : false;
-//     scene.style.left = (collapsed ? LMP_LEFT_COLLAPSED : LMP_LEFT_EXPANDED) + 'px';
-// }
-
-// window.lmpTogglePin = function() {
-//     lmpPinned = !lmpPinned;
-//     var btn   = document.getElementById('lmp-pin-btn');
-//     var scene = document.getElementById('lmp-scene');
-    
-//     btn.classList.toggle('pinned', lmpPinned);
-//     btn.title = lmpPinned ? 'Détacher' : 'Épingler à la sidebar';
-    
-//     if (lmpPinned) {
-//         // Masquer la lampe flottante
-//         scene.style.opacity = '0';
-//         scene.style.pointerEvents = 'none';
-//         // Afficher le slot dans la sidebar
-//         var slot = document.getElementById('lmp-sidebar-slot');
-//         if (slot) slot.style.display = 'flex';
-//     } else {
-//         // Réafficher la lampe flottante
-//         scene.style.opacity = '1';
-//         scene.style.pointerEvents = 'none'; // la scène reste non-cliquable (lmp-img l'est)
-//         // Masquer le slot sidebar
-//         var slot = document.getElementById('lmp-sidebar-slot');
-//         if (slot) slot.style.display = 'none';
-//     }
-// };
-
-// window.lmpUnpin = function() {
-//     lmpPinned = false;
-//     var btn   = document.getElementById('lmp-pin-btn');
-//     var scene = document.getElementById('lmp-scene');
-//     var slot  = document.getElementById('lmp-sidebar-slot');
-
-//     btn.classList.remove('pinned');
-//     btn.title = 'Épingler à la sidebar';
-
-//     // Réafficher la lampe flottante
-//     scene.style.opacity = '1';
-//     scene.style.pointerEvents = 'none';
-
-//     // Masquer le slot sidebar
-//     if (slot) slot.style.display = 'none';
-// };
-
-// Observer la largeur réelle de l'aside (Alpine modifie offsetWidth)
-// var lmpAside = document.querySelector('aside');
-// if (lmpAside) {
-//     new ResizeObserver(lmpUpdatePosition).observe(lmpAside);
-// }
-
-// lmpUpdatePosition();
-
-// Appliquer l'état sauvegardé au chargement
-(function() {
-    if (lmpPinned) {
-        var scene = document.getElementById('lmp-scene');
-        var slot  = document.getElementById('lmp-sidebar-slot');
-        var btn   = document.getElementById('lmp-pin-btn');
-        if (scene) { scene.style.opacity = '0'; scene.style.pointerEvents = 'none'; }
-        if (slot)  slot.style.display = 'flex';
-        if (btn)   { btn.classList.add('pinned'); btn.title = 'Désépingler'; }
-        var label = document.getElementById('lmp-pin-label');
-        if (label) label.textContent = 'Désépingler';
-    }
-})();
-
-// ── Toggle pin ────────────────────────────────────────────────
+// ================================================================
+// PIN / UNPIN
+// ================================================================
 window.lmpTogglePin = function() {
     lmpPinned = !lmpPinned;
-
-    // ← Sauvegarder dans localStorage
     localStorage.setItem('lmp_pinned', lmpPinned ? 'true' : 'false');
 
     var btn   = document.getElementById('lmp-pin-btn');
@@ -678,7 +469,6 @@ window.lmpTogglePin = function() {
     }
 };
 
-// ── Unpin depuis la sidebar ───────────────────────────────────
 window.lmpUnpin = function() {
     lmpPinned = false;
     localStorage.setItem('lmp_pinned', 'false');
@@ -692,17 +482,29 @@ window.lmpUnpin = function() {
     btn.title = 'Épingler à la sidebar';
     if (label) label.textContent = 'Épingler';
     scene.style.opacity = '1';
-
     scene.style.pointerEvents = 'none';
     if (slot) slot.style.display = 'none';
 };
 
+// Appliquer état pin au chargement
+(function() {
+    if (lmpPinned) {
+        var scene = document.getElementById('lmp-scene');
+        var slot  = document.getElementById('lmp-sidebar-slot');
+        var btn   = document.getElementById('lmp-pin-btn');
+        var label = document.getElementById('lmp-pin-label');
+        if (scene) { scene.style.opacity = '0'; scene.style.pointerEvents = 'none'; }
+        if (slot)  slot.style.display = 'flex';
+        if (btn)   { btn.classList.add('pinned'); btn.title = 'Désépingler'; }
+        if (label) label.textContent = 'Désépingler';
+    }
+})();
+
+// Masquer le bouton pin hors de l'espace membre
 var currentPath = window.location.pathname;
 var allowPin    = currentPath.includes('/espace') || currentPath.includes('/profile');
 var pinBtn      = document.getElementById('lmp-pin-btn');
-
 if (pinBtn && !allowPin) {
     pinBtn.style.display = 'none';
-    // Forcer unpin si on change de page hors espace
     lmpUnpin();
 }

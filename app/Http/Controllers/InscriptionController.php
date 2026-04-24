@@ -142,8 +142,8 @@ class InscriptionController extends Controller
                     ],
                 ]);
  
-            return response()->json(['url' => $session->url]);
-        }
+                return response()->json(['url' => $session->url]);
+            }
  
         // ── Acompte 1000€ (Absolu uniquement) ────────────────────────
         if ($fraction === 'acompte') {
