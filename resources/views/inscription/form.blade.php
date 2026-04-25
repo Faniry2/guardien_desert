@@ -185,7 +185,7 @@
               </div>
               <div class="pay-check"></div>
             </label>
-            <label class="pay-method" onclick="selectPay(this,'paypal')">
+            {{-- <label class="pay-method" onclick="selectPay(this,'paypal')">
               <input type="radio" name="methode" value="paypal">
               <span class="pay-icon">🅿️</span>
               <div>
@@ -193,7 +193,7 @@
                 <div class="pay-desc">Compte PayPal · Backup</div>
               </div>
               <div class="pay-check"></div>
-            </label>
+            </label> --}}
           </div>
 
           <!-- CGV -->

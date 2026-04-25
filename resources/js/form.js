@@ -3,6 +3,7 @@ window.goStep1 =goStep1;
 window.selectPay =selectPay;
 window.selectFraction =selectFraction;
 window.submitPay =submitPay;
+window.setMode =setMode;
 // ══ MODE ══
 function setMode(m){
   document.documentElement.setAttribute('data-mode',m);

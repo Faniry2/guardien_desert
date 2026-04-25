@@ -350,4 +350,7 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:1px;
   .form-wrap{padding:2rem 1.5rem 6rem;}
   .form-row{grid-template-columns:1fr;}
   .payment-methods{grid-template-columns:1fr;}
+  #lmp-img{width: 40px;}
+  #lmp-hint{display:none !important}
+  .mode-sw{bottom:1rem;left:50%;transform:translateX(-50%); display:none !important;}
 }

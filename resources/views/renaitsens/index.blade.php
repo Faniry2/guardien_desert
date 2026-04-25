@@ -522,7 +522,7 @@ body {
 .mode-sw {
   position: fixed;
   bottom: 2rem;
-  left: 1.5rem;
+  left: 25rem;
   z-index: 500;
   display: flex;
   gap: .35rem;
@@ -633,10 +633,12 @@ nav ul li a:hover::after{width:100%}
 .burger.open span:nth-child(2){opacity:0;width:0}
 .burger.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg);width:22px}
 
-@media(max-width:820px){
+@media(max-width:900px){
   nav ul, #nav-cta-d{display:none !important}
   .burger{display:flex !important}
+  .mode-sw{bottom:1rem;left:50%;transform:translateX(-50%); display:none !important;}
 }
+
 </style>
 </head>
 <body>
@@ -671,6 +673,7 @@ nav ul li a:hover::after{width:100%}
   <a href="{{ route('home') }}" onclick="closeMenu()">Le Carnet</a>
   <a href="{{ route('renait_sens') }}" onclick="closeMenu()">Renait-Sens</a>
   <a href="{{ route('traversees') }}" onclick="closeMenu()">Traversées</a>
+  <a href="{{ route('login') }}" onclick="closeMenu()">Accéder au Carnet</a>
 </div>
 
 <!-- LAYOUT -->
@@ -762,8 +765,8 @@ nav ul li a:hover::after{width:100%}
 
       <!-- CTA -->
       <div class="bio-cta reveal">
-        <a href="#" class="btn-or">📖 &nbsp;Accéder au Carnet</a>
-        <a href="#" class="btn-ghost">🌵 &nbsp;Les Traversées</a>
+        <a href="{{ route('login') }}" class="btn-or">📖 &nbsp;Accéder au Carnet</a>
+        <a href="{{ route('traversees') }}" class="btn-ghost">🌵 &nbsp;Les Traversées</a>
       </div>
 
     </div>

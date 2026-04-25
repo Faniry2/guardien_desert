@@ -30,7 +30,7 @@
    IMAGE DE LA LAMPE
    ────────────────────────────────────────────────────────────── */
 #lmp-img {
-    width: 140px;
+    width: 100px;
     display: block;
     cursor: pointer;
     filter: drop-shadow(0 4px 24px rgba(201,151,58,.6));
@@ -329,4 +329,9 @@
     #lmp-scene { right: 12px; left: auto; bottom: 12px; }
     #lmp-img { width: 80px; }
     #lmp-hint { display: none; }
+}
+
+@media(max-width:900px){
+  #lmp-img{width: 40px;}
+  #lmp-hint{display:none !important}
 }

@@ -4,6 +4,34 @@
 
 @push("styles")
   @vite(['resources/css/carnet.css'])
+  <style>
+/* ── Étoiles CSS scintillantes (mode nuit hero) ── */
+#hero-star-field {
+  position:absolute;inset:0;z-index:1;pointer-events:none;
+  opacity:0;transition:opacity 1.8s;
+}
+[data-mode="night"] #hero-star-field { opacity:1; }
+ 
+.hs-star {
+  position:absolute;border-radius:50%;
+  animation:hs-twinkle var(--dur) var(--delay) ease-in-out infinite alternate;
+  transform-origin:center;
+}
+@keyframes hs-twinkle {
+  0%   { opacity:var(--min-op,.22); transform:scale(.6); }
+  50%  { opacity:var(--mid-op,.52); transform:scale(1.0); }
+  100% { opacity:var(--max-op,.82); transform:scale(1.7);
+         box-shadow:0 0 var(--glow,4px) var(--glow-half,2px) var(--color,rgba(255,255,255,.6)); }
+}
+.hs-gold  { --color:rgba(255,200,80,.75);  --min-op:.25; --mid-op:.55; --max-op:.90;
+  background:radial-gradient(circle,#fff9e0 0%,#ffd060 40%,#ff9a14 100%); }
+.hs-blue  { --color:rgba(150,200,255,.70); --min-op:.20; --mid-op:.50; --max-op:.85;
+  background:radial-gradient(circle,#ffffff 0%,#c8e8ff 50%,#6ab0ff 100%); }
+.hs-white { --color:rgba(255,255,255,.65); --min-op:.18; --mid-op:.45; --max-op:.80;
+  background:radial-gradient(circle,#ffffff 0%,#e8f0ff 60%,transparent 100%); }
+.hs-amber { --color:rgba(255,140,30,.70);  --min-op:.22; --mid-op:.52; --max-op:.88;
+  background:radial-gradient(circle,#fff5d0 0%,#ffb830 45%,#e06010 100%); }
+</style>
 @endpush
 
 @section('content')
@@ -36,10 +64,19 @@
   <a href="{{ route('home') }}" onclick="closeMenu()">Le Carnet</a>
   <a href="{{ route('renait_sens') }}" onclick="closeMenu()">Renait-Sens</a>
   <a href="{{ route('traversees') }}" onclick="closeMenu()">Traversées</a>
+  <a href="{{ route('login') }}" onclick="closeMenu()">Accéder au Carnet</a>
 </div>
 
 <!-- HERO -->
 <section id="hero">
+  {{-- <div class="hero-bg hero-bg-night"></div>
+  <div class="hero-bg hero-bg-dawn"></div>
+  <div class="hero-bg hero-bg-noon"></div> --}}
+  <canvas id="hero-star-canvas"></canvas>
+  {{-- Canvas particules texte (midi) --}}
+  <canvas id="hero-noon-canvas"></canvas>
+  <canvas id="hero-dawn-canvas"></canvas>
+  <div id="hero-star-field"></div>
   <div class="hero-bg hero-bg-night"></div>
   <div class="hero-bg hero-bg-dawn"></div>
   <div class="hero-bg hero-bg-noon"></div>
