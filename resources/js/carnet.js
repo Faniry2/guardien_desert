@@ -73,6 +73,7 @@ window.closeMenu  = closeMenu;
 (function(){
   const canvas = document.getElementById('hero-star-canvas');
   if(!canvas) return;
+  if(window.innerWidth <= 900) return;  
   const ctx = canvas.getContext('2d');
   let W, H;
   const mouse = { x:-9999, y:-9999, active:false };
@@ -156,6 +157,7 @@ window.closeMenu  = closeMenu;
 (function(){
   const canvas = document.getElementById('hero-noon-canvas');
   if(!canvas) return;
+    if(window.innerWidth <= 900) return; 
   const ctx = canvas.getContext('2d');
   let W, H;
   const mouse = { x:-9999, y:-9999, px:-9999, py:-9999, active:false };
@@ -256,6 +258,7 @@ window.closeMenu  = closeMenu;
 (function(){
   const canvas = document.getElementById('hero-dawn-canvas');
   if(!canvas) return;
+  if(window.innerWidth <= 900) return; 
   const ctx = canvas.getContext('2d');
   let W, H;
 
